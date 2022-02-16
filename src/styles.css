@@ -1,1 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --main-color: #123750;
+  --main-color-light: #156c90;
+  --secondary-color: #20a7d8;
+  --secondary-color-light: #20dbd8;
+  --black-color: #12101d;
+
+  /* fonts */
+  --font-main: "Roboto", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+  background-color: var(--main-color);
+}
+
+body {
+  background-color: var(--main-color);
+  color: var(--secondary-color-light);
+  font-size: 16px;
+  font-family: var(--font-main);
+  font-weight: 300;
+  overflow-x: hidden;
+}
