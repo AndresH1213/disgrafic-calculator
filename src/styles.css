@@ -29,4 +29,49 @@ body {
   font-family: var(--font-main);
   font-weight: 300;
   overflow-x: hidden;
+  background: linear-gradient(
+    -45deg,
+    var(--main-color),
+    var(--main-color-light),
+    var(--secondary-color),
+    #23d5ab
+  );
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: var(--secondary-color-light);
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media only screen and (max-width: 980px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+@media only screen and (max-width: 680px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
 }
