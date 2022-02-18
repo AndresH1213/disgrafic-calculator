@@ -12,4 +12,9 @@
             <li class="nav-items"><a routerLinkActive="active-link" routerLink="/about">About US</a></li>
         </ul>
     </div>
+    <div class="navbar-menu">
+        <p-menu [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" #menu [popup]="true" [model]="items">
+        </p-menu>
+        <button type="button" pButton icon="pi pi-list" label="Menu" (click)="menu.toggle($event)"></button>
+    </div>
 </nav>
