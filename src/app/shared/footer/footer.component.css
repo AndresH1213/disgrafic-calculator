@@ -93,7 +93,14 @@ address {
   .site-footer .social-icons {
     text-align: center;
   }
+  .container-contact-info {
+    flex-direction: column;
+  }
+  .contact-info {
+    flex-direction: row;
+  }
 }
+
 .social-icons {
   padding-left: 0;
   margin-bottom: 0;
