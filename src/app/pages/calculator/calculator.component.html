@@ -1,1 +1,74 @@
 <app-navbar></app-navbar>
+<section class="container">
+    <form>
+        <div class="container">
+            <h5>Valor de materiales y maquinarias</h5>
+            <div class="container_inputs--materials">
+                <div class="form-control">
+                    <p>Planchas</p>
+                    <div class="form-group">
+                        <p-dropdown [options]="tiposPlancha" name="tipo-planchas" [(ngModel)]="formFields.planchas.tipo"
+                            optionLabel="name" [style]="{'minWidth': '10rem'}">
+                        </p-dropdown>
+                        <input id="float-input" type="number" pInputText [(ngModel)]="value6" name="planchas-cant"
+                            placeholder="cant">
+                    </div>
+                </div>
+                <div class="form-group form-control">
+                    <div>
+                        <p>Pliegos</p>
+                        <input id="float-input" type="number" pInputText [(ngModel)]="value6" name="pliegos-cant"
+                            class="ng-dirty" placeholder="cant">
+                    </div>
+                    <div>
+                        <p>Clase de Papel</p>
+                        <p-cascadeSelect [(ngModel)]="formFields.papel.clase" name="clase-papel" [options]="countries"
+                            optionLabel="cname" optionGroupLabel="name" [optionGroupChildren]="['states', 'cities']"
+                            [style]="{'minWidth': '10rem'}"></p-cascadeSelect>
+                    </div>
+                </div>
+                <div class="form-control">
+                    <p>Tamaño</p>
+                    <div class="form-group">
+                        <p-dropdown [options]="tamanoPapel" name="tamano-papel" [(ngModel)]="formFields.papel.tipo"
+                            optionLabel="name" [style]="{'minWidth': '10rem'}">
+                        </p-dropdown>
+                        <input id="float-input" type="number" pInputText [(ngModel)]="value6" name="tamaño-cant"
+                            placeholder="cant">
+                    </div>
+                </div>
+                <div class="form-control">
+                    <p>Tipo de Máquina</p>
+                    <div class="form-group">
+                        <span class="p-float-label">
+                            <p-dropdown [options]="tiposMaquina" name="tipo-maquina" [style]="{'minWidth': '10rem'}"
+                                [(ngModel)]="formFields.maquina.tipo" optionLabel="name">
+                            </p-dropdown>
+                            <input id="float-input" type="number" pInputText [(ngModel)]="value6"
+                                name="tipo-maquina-cant" placeholder="cant">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="container">
+            <h5>Mano de obra</h5>
+            <div class="container_inputs--workforce">
+                <div *ngFor="let field of workforceFields" class="form-control">
+                    <span class="p-float-label">
+                        <input id="float-input" type="number" pInputText [(ngModel)]="formFields[field].precio"
+                            name="field" class="ng-dirty">
+                        <label for="float-input-invalid">{{ formFields[field].label }}</label>
+                    </span>
+                </div>
+                <div class="control-percentage">
+                    <p-dropdown [options]="tamanoPapel" name="tamano-papel" [(ngModel)]="formFields.papel.tipo"
+                        optionLabel="name" [style]="{'minWidth': '10rem'}">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+<app-footer></app-footer>
