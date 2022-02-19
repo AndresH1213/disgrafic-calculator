@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
-import { PagesRoutingModule } from './pages-routing.module';
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -14,14 +13,25 @@ import { CalculatorComponent } from './calculator/calculator.component';
 import { UsersComponent } from './users/users.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
+import { ProductsComponent } from './products/products.component';
+import { PagesComponent } from './pages.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [CalculatorComponent, UsersComponent, HomeComponent, AboutComponent],
+  declarations: [
+    PagesComponent,
+    CalculatorComponent,
+    UsersComponent,
+    HomeComponent,
+    AboutComponent,
+    ProductsComponent,
+  ],
   imports: [
     CommonModule,
-    PagesRoutingModule,
+    RouterModule,
     SharedModule,
     FormsModule,
+
     ButtonModule,
     InputTextModule,
     CardModule,
