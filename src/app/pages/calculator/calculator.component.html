@@ -1,14 +1,16 @@
 <section class="container">
     <form>
-        <div class="container">
+        <div class="container-materials">
             <h5>Valor de materiales y maquinarias</h5>
             <div class="container_inputs--materials">
                 <div class="form-control">
                     <p>Planchas</p>
                     <div class="form-group">
-                        <p-dropdown [options]="tiposPlancha" name="tipo-planchas" [(ngModel)]="formFields.planchas.tipo"
-                            optionLabel="name" [style]="{'minWidth': '10rem'}">
-                        </p-dropdown>
+                        <p-cascadeSelect [(ngModel)]="formFields.planchas.precio" name="clase-papel"
+                            placeholder="Seleccione" [options]="planchasStructured" optionLabel="label"
+                            optionGroupLabel="subtype" [optionGroupChildren]="['materials']"
+                            [style]="{'minWidth': '10rem'}" optionValue="price">
+                        </p-cascadeSelect>
                         <input id="float-input" type="number" pInputText [(ngModel)]="value6" name="planchas-cant"
                             placeholder="cant">
                     </div>
@@ -21,29 +23,34 @@
                     </div>
                     <div>
                         <p>Clase de Papel</p>
-                        <p-cascadeSelect [(ngModel)]="formFields.papel.clase" name="clase-papel" [options]="countries"
-                            optionLabel="cname" optionGroupLabel="name" [optionGroupChildren]="['states', 'cities']"
-                            [style]="{'minWidth': '10rem'}"></p-cascadeSelect>
+                        <p-cascadeSelect [(ngModel)]="formFields.papel.precio" name="clase-papel"
+                            placeholder="Seleccione" [options]="papersStructured" optionLabel="label"
+                            optionGroupLabel="subtype" [optionGroupChildren]="['materials']"
+                            [style]="{'minWidth': '10rem'}" optionValue="price">
+                        </p-cascadeSelect>
                     </div>
                 </div>
                 <div class="form-control">
                     <p>Tamaño</p>
                     <div class="form-group">
-                        <p-dropdown [options]="tamanoPapel" name="tamano-papel" [(ngModel)]="formFields.papel.tipo"
-                            optionLabel="name" [style]="{'minWidth': '10rem'}">
+                        <p-dropdown [options]="sizes" placeholder="Seleccione" name="tamano-papel"
+                            [(ngModel)]="formFields.papel.tamano" optionLabel="label" optionValue="divider"
+                            [style]="{'minWidth': '10rem'}">
                         </p-dropdown>
-                        <input id="float-input" type="number" pInputText [(ngModel)]="value6" name="tamaño-cant"
-                            placeholder="cant">
+                        <input id="float-input" type="number" pInputText [(ngModel)]="formFields.papel.cant"
+                            name="tamaño-cant" placeholder="cant">
                     </div>
                 </div>
                 <div class="form-control">
                     <p>Tipo de Máquina</p>
                     <div class="form-group">
                         <span class="p-float-label">
-                            <p-dropdown [options]="tiposMaquina" name="tipo-maquina" [style]="{'minWidth': '10rem'}"
-                                [(ngModel)]="formFields.maquina.tipo" optionLabel="name">
-                            </p-dropdown>
-                            <input id="float-input" type="number" pInputText [(ngModel)]="value6"
+                            <p-cascadeSelect placeholder="Seleccione" [(ngModel)]="formFields.maquina.precio"
+                                name="clase-papel" [options]="machineStructured" optionLabel="label"
+                                optionGroupLabel="subtype" [optionGroupChildren]="['materials']"
+                                [style]="{'minWidth': '10rem'}" optionValue="price">
+                            </p-cascadeSelect>
+                            <input id="float-input" type="number" pInputText [(ngModel)]="formFields.maquina.cant"
                                 name="tipo-maquina-cant" placeholder="cant">
                         </span>
                     </div>
@@ -51,20 +58,36 @@
             </div>
 
         </div>
-        <div class="container">
+        <div class="container-workforce">
             <h5>Mano de obra</h5>
             <div class="container_inputs--workforce">
                 <div *ngFor="let field of workforceFields" class="form-control">
-                    <span class="p-float-label">
-                        <input id="float-input" type="number" pInputText [(ngModel)]="formFields[field].precio"
-                            name="field" class="ng-dirty">
-                        <label for="float-input-invalid">{{ formFields[field].label }}</label>
-                    </span>
+                    <div class="workforce-field">
+                        <label for="horizontal">{{ formFields[field].label }}</label>
+                        <p-inputNumber [(ngModel)]="formFields[field].precio" [showButtons]="true"
+                            spinnerMode="horizontal" buttonLayout="horizontal" [step]="1000"
+                            [inputStyle]="{'width': '7rem'}" decrementButtonClass="p-button-info" name="{{field}}"
+                            incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus"
+                            placeholder="Precio" [minFractionDigits]="0" decrementButtonIcon="pi pi-minus">
+                        </p-inputNumber>
+                    </div>
+                </div>
+                <div>
+                    <p-dropdown [options]="clients" name="clients" optionLabel="name"
+                        placeholder="Seleccione un cliente" [style]="{'minWidth': '11rem'}"
+                        [(ngModel)]="selectedClient">
+                    </p-dropdown>
                 </div>
                 <div class="control-percentage">
-                    <p-dropdown [options]="tamanoPapel" name="tamano-papel" [(ngModel)]="formFields.papel.tipo"
-                        optionLabel="name" [style]="{'minWidth': '10rem'}">
-                    </p-dropdown>
+                    <div class="p-inputgroup">
+                        <button type="button" pButton pRipple icon="pi pi-minus" styleClass="p-button-success"></button>
+                        <input type="text" pInputText placeholder="Porcentaje">
+                        <button type="button" pButton pRipple icon="pi pi-plus" styleClass="p-button-danger"></button>
+                    </div>
+                </div>
+                <div>
+                    <p-button styleClass="p-button-danger me-2" (click)="calculate()">Calcular</p-button>
+                    <p-button styleClass="p-button-success">Guardar</p-button>
                 </div>
             </div>
         </div>

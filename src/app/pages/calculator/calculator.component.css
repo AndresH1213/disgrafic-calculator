@@ -9,9 +9,12 @@ form {
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
-h3,
 h5 {
   text-align: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: rgba(173, 168, 168, 0.6);
+  text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.1);
 }
 p {
   padding: 0;
@@ -46,7 +49,7 @@ input[type="number"] {
   justify-content: center;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
-  gap: 0.5em;
+  row-gap: 1em;
 }
 
 .form-control {
@@ -65,4 +68,9 @@ input[type="number"] {
 }
 .form-group {
   display: flex;
+}
+
+.workforce-field {
+  display: flex;
+  flex-direction: column;
 }
