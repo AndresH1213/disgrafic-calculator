@@ -1,0 +1,26 @@
+.product-image {
+  height: 300px;
+  padding: 10px;
+  border-radius: 1.8em;
+}
+
+.products-header {
+  font-size: x-large;
+  color: var(--black-color);
+  margin: 5px 0px 10px;
+  text-align: center;
+  text-decoration: underline;
+  letter-spacing: 3px;
+}
+
+.product-item-content {
+  align-items: center;
+  text-align: center;
+  color: var(--main-color);
+}
+
+@media only screen and (max-width: 450px) {
+  .product-image {
+    height: 200px;
+  }
+}
