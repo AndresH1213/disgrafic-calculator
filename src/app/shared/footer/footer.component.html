@@ -4,7 +4,23 @@
             <ul class="footer-links">
                 <li><a routerLink="/about">Sobre Nosotros</a></li>
                 <li><a routerLink="/products">Productos</a></li>
-                <li><a href="mailto:oscarblanco777@hotmail.com">Contactános</a></li>
+                <!-- <li></li> -->
+                <li class="footer-links__contact" (mouseenter)="isDivContact = true"
+                    (mouseleave)="isDivContact = false">
+                    Contactános
+
+                    <div *ngIf="isDivContact" class="animate__animated animate__fadeIn">
+                        <p>
+                            <a href="mailto:oscarblanco777@hotmail.com">Email</a>
+                        </p>
+                        <p>
+                            <a href="https://api.whatsapp.com/send?phone=573162215545">WhatsApp</a>
+                        </p>
+
+                    </div>
+
+                </li>
+
             </ul>
         </div>
         <hr>
@@ -25,9 +41,9 @@
 
         <div class="col-md-3 col-sm-4 col-xs-8">
             <ul class="social-icons">
-                <li><a class="facebook" href="https://www.facebook.com/Disgrafic-Publicidad-101981001864316"><i
-                            class="pi pi-facebook"></i></a></li>
-                <li><a class="instagram" href="https://www.instagram.com/lito_disgrafic/"><i
+                <li><a class="facebook" href="https://www.facebook.com/Disgrafic-Publicidad-101981001864316"
+                        target="_blank"><i class="pi pi-facebook"></i></a></li>
+                <li><a class="instagram" href="https://www.instagram.com/lito_disgrafic/" target="_blank"><i
                             class="pi pi-instagram"></i></a></li>
             </ul>
         </div>

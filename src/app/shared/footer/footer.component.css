@@ -64,6 +64,19 @@
   list-style: none;
   text-decoration: wavy;
 }
+.footer-links__contact {
+  position: relative;
+}
+.footer-links__contact > div {
+  position: absolute;
+  padding: 10px 20px;
+  background-color: var(--black-color);
+  opacity: 0.9;
+  border-radius: 1.2em;
+  top: -80px;
+  left: -5px;
+}
+
 address {
   margin-bottom: 0;
 }
