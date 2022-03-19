@@ -1,8 +1,9 @@
 section {
   display: grid;
+  padding: 50px;
   grid-template-columns: 1fr 1fr;
-  height: 80vh;
   align-content: center;
+  place-items: center;
   background-color: transparent;
 }
 
@@ -14,7 +15,6 @@ p-button {
 
 .landing-title {
   text-align: center;
-  transform: translateY(-1em);
   font-family: var(--font-main);
   font-size: 2.5rem;
   font-weight: 700;
@@ -29,29 +29,27 @@ p-button {
 }
 
 .image-home {
-  width: 55vw;
-  height: 45vh;
+  width: 45vw;
+  height: 40vh;
   transform: translateX(-20px);
 }
 
 .waves {
   position: absolute;
-  bottom: 0%;
+  bottom: 15%;
   grid-column: 1/-1;
 }
 
 @media only screen and (max-width: 700px) {
   section {
+    padding: 20px;
     grid-template-columns: 2fr;
-    background-image: url("src/assets/images/home.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
     color: var(--black-color);
   }
-
   .image-home {
-    display: none;
+    margin-top: 20px;
+    width: 90%;
+    border-radius: 2em;
   }
   .landing-description {
     font-weight: 700;
@@ -63,23 +61,15 @@ p-button {
   }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 510px) {
   section {
-    background-position: 30% 95%;
-    background-size: 80%;
-    align-content: top;
-    height: 60vh;
-  }
-  .landing-title {
-    font-size: 1.5rem;
-  }
-  .landing-description-container {
-    transform: translateY(-3.5em);
-  }
-  .landing-description {
     padding: 0px;
   }
-  .waves {
-    display: none;
+  .image-home {
+    width: 100%;
+  }
+  .landing-title {
+    font-size: 2rem;
+    padding-top: 10px;
   }
 }
