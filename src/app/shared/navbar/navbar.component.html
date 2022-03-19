@@ -7,8 +7,8 @@
             <li class="nav-items"><a routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}"
                     routerLink="/">Inicio</a></li>
             <li class="nav-items"><a routerLinkActive="active-link" routerLink="/products">Productos</a></li>
-            <li class="nav-items"><a routerLinkActive="active-link" routerLink="/calculator">Calcular</a></li>
-            <li class="nav-items"><a routerLinkActive="active-link" routerLink="/users">Clientes</a></li>
+            <li class="nav-items"><a routerLinkActive="active-link" routerLink="/calculator">Calculadora</a></li>
+            <li *ngIf="isAuth" class="nav-items"><a routerLinkActive="active-link" routerLink="/users">Clientes</a></li>
             <li class="nav-items"><a routerLinkActive="active-link" routerLink="/about">Sobre Nosotros</a></li>
         </ul>
     </div>

@@ -1,0 +1,14 @@
+{
+    "/products/": {
+        "target": "https://qoiz5kadn7.execute-api.us-east-2.amazonaws.com",
+        "secure": true,
+        "loglevel": "debug",
+        "changeOrigin": true
+    },
+    "/clients/": {   
+        "target": "https://qoiz5kadn7.execute-api.us-east-2.amazonaws.com",
+        "secure": true,
+        "loglevel": "debug",
+        "changeOrigin": true
+    }
+}
