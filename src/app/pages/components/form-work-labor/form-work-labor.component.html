@@ -1,0 +1,37 @@
+<form action="">
+    <div class="container-workforce">
+        <h5>Mano de obra</h5>
+        <div class="container_inputs--workforce">
+            <div *ngFor="let field of workforceFields" class="form-control">
+                <div class="workforce-field">
+                    <label for="horizontal">{{ formFields[field].label }}</label>
+                    <p-inputNumber [(ngModel)]="formFields[field].precio" [showButtons]="true" spinnerMode="horizontal"
+                        buttonLayout="horizontal" [step]="1000" [inputStyle]="{'width': '7rem'}"
+                        decrementButtonClass="p-button-info" name="{{field}}" incrementButtonClass="p-button-success"
+                        incrementButtonIcon="pi pi-plus" placeholder="Precio" [minFractionDigits]="0"
+                        decrementButtonIcon="pi pi-minus">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <div>
+                <p-dropdown [options]="clients" name="clients" optionLabel="name" placeholder="Seleccione un cliente"
+                    [style]="{'minWidth': '11rem'}" [(ngModel)]="selectedClient">
+                </p-dropdown>
+            </div>
+            <div class="control-percentage">
+                <div class="p-inputgroup">
+                    <p-inputNumber [(ngModel)]="porcentaje" [showButtons]="true" spinnerMode="horizontal"
+                        buttonLayout="horizontal" [step]="1000" [inputStyle]="{'width': '7rem'}"
+                        decrementButtonClass="p-button-info" name="porcentaje" incrementButtonClass="p-button-success"
+                        incrementButtonIcon="pi pi-plus" placeholder="Porcentaje" [minFractionDigits]="0"
+                        decrementButtonIcon="pi pi-minus">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <div class="mb-2">
+                <p-button styleClass="p-button-danger me-2" (click)="calculate()">Calcular</p-button>
+                <p-button styleClass="p-button-success">Guardar</p-button>
+            </div>
+        </div>
+    </div>
+</form>
