@@ -4,92 +4,70 @@
             <h5>Valor de materiales y maquinarias</h5>
             <div class="container_inputs--materials">
                 <div class="form-control">
-                    <p>Planchas</p>
+                    <p class="form-control__header">Planchas</p>
                     <div class="form-group">
-                        <p-cascadeSelect [(ngModel)]="formFields.planchas.precio" name="clase-papel"
-                            placeholder="Seleccione" [options]="planchasStructured" optionLabel="label"
-                            optionGroupLabel="subtype" [optionGroupChildren]="['materials']"
-                            [style]="{'minWidth': '10rem'}" optionValue="price">
+                        <p-cascadeSelect [(ngModel)]="planchasSelected" name="clase-papel" placeholder="Seleccione"
+                            [options]="planchasStructured" optionLabel="label" optionGroupLabel="subtype"
+                            [optionGroupChildren]="['materials']" [style]="{'width': '10rem'}" optionValue="prodId">
                         </p-cascadeSelect>
-                        <input id="float-input" type="number" pInputText [(ngModel)]="value6" name="planchas-cant"
+                        <input id="float-input" type="number" pInputText [(ngModel)]="planchasCant" name="planchas-cant"
                             placeholder="cant">
                     </div>
                 </div>
                 <div class="form-group form-control">
                     <div>
-                        <p>Pliegos</p>
-                        <input id="float-input" type="number" pInputText [(ngModel)]="value6" name="pliegos-cant"
-                            class="ng-dirty" placeholder="cant">
+                        <p class="form-control__header">Pliegos</p>
+                        <input id="float-input" type="number" pInputText [(ngModel)]="pliegosCant" name="pliegos-cant"
+                            class="ng-dirty" placeholder="cant" (keyup)="setPliegos($event)">
                     </div>
                     <div>
-                        <p>Clase de Papel</p>
-                        <p-cascadeSelect [(ngModel)]="formFields.papel.precio" name="clase-papel"
-                            placeholder="Seleccione" [options]="papersStructured" optionLabel="label"
-                            optionGroupLabel="subtype" [optionGroupChildren]="['materials']"
-                            [style]="{'minWidth': '10rem'}" optionValue="price">
+                        <p class="form-control__header">Clase de Papel</p>
+                        <p-cascadeSelect [(ngModel)]="papelSelected" name="clase-papel" placeholder="Seleccione"
+                            [options]="papersStructured" optionLabel="label" optionGroupLabel="subtype"
+                            (onChange)="papelType($event)" [optionGroupChildren]="['materials']"
+                            [style]="{'width': '10rem'}" optionValue="prodId">
                         </p-cascadeSelect>
                     </div>
                 </div>
                 <div class="form-control">
-                    <p>Tamaño</p>
+                    <p class="form-control__header">Tamaño</p>
                     <div class="form-group">
                         <p-dropdown [options]="sizes" placeholder="Seleccione" name="tamano-papel"
-                            [(ngModel)]="formFields.papel.tamano" optionLabel="label" optionValue="divider"
-                            [style]="{'minWidth': '10rem'}">
+                            [(ngModel)]="papelTamano" optionLabel="label" optionValue="divider" [disabled]="isResmilla"
+                            (onChange)="setSizes($event)" [style]="{'width': '10rem'}">
                         </p-dropdown>
-                        <input id="float-input" type="number" pInputText [(ngModel)]="formFields.papel.cant"
-                            name="tamaño-cant" placeholder="cant">
+                        <div class="sizes-label">{{ papelTamanosCant | number }}</div>
                     </div>
                 </div>
                 <div class="form-control">
-                    <p>Tipo de Máquina</p>
+                    <p class="form-control__header">Tipo de Máquina</p>
                     <div class="form-group">
                         <span class="p-float-label">
-                            <p-cascadeSelect placeholder="Seleccione" [(ngModel)]="formFields.maquina.precio"
-                                name="clase-papel" [options]="machineStructured" optionLabel="label"
-                                optionGroupLabel="subtype" [optionGroupChildren]="['materials']"
-                                [style]="{'minWidth': '10rem'}" optionValue="price">
+                            <p-cascadeSelect placeholder="Seleccione" [(ngModel)]="maquinaSelected" name="clase-papel"
+                                [options]="machineStructured" optionLabel="label" optionGroupLabel="subtype"
+                                [optionGroupChildren]="['materials']" [style]="{'width': '10rem'}" optionValue="prodId">
                             </p-cascadeSelect>
-                            <input id="float-input" type="number" pInputText [(ngModel)]="formFields.maquina.cant"
+                            <input id="float-input" type="number" pInputText [(ngModel)]="maquinaCant"
                                 name="tipo-maquina-cant" placeholder="cant">
                         </span>
                     </div>
                 </div>
             </div>
-
+            <div *ngIf="showWork">
+                <app-form-work-labor></app-form-work-labor>
+            </div>
         </div>
-        <div class="container-workforce">
-            <h5>Mano de obra</h5>
-            <div class="container_inputs--workforce">
-                <div *ngFor="let field of workforceFields" class="form-control">
-                    <div class="workforce-field">
-                        <label for="horizontal">{{ formFields[field].label }}</label>
-                        <p-inputNumber [(ngModel)]="formFields[field].precio" [showButtons]="true"
-                            spinnerMode="horizontal" buttonLayout="horizontal" [step]="1000"
-                            [inputStyle]="{'width': '7rem'}" decrementButtonClass="p-button-info" name="{{field}}"
-                            incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus"
-                            placeholder="Precio" [minFractionDigits]="0" decrementButtonIcon="pi pi-minus">
-                        </p-inputNumber>
-                    </div>
-                </div>
-                <div>
-                    <p-dropdown [options]="clients" name="clients" optionLabel="name"
-                        placeholder="Seleccione un cliente" [style]="{'minWidth': '11rem'}"
-                        [(ngModel)]="selectedClient">
-                    </p-dropdown>
-                </div>
-                <div class="control-percentage">
-                    <div class="p-inputgroup">
-                        <button type="button" pButton pRipple icon="pi pi-minus" styleClass="p-button-success"></button>
-                        <input type="text" pInputText placeholder="Porcentaje">
-                        <button type="button" pButton pRipple icon="pi pi-plus" styleClass="p-button-danger"></button>
-                    </div>
-                </div>
-                <div>
-                    <p-button styleClass="p-button-danger me-2" (click)="calculate()">Calcular</p-button>
-                    <p-button styleClass="p-button-success">Guardar</p-button>
-                </div>
+        <div class="mt-3 ms-2 mb-2" *ngIf="!showWork">
+            <p-button (click)="showResponsiveDialog()" styleClass="p-button-success ms-3"><i
+                    class="pi pi-external-link me-1"></i>
+                Info</p-button>
+            <p-button styleClass="p-button-danger ms-2" (click)="calculate()">Calcular</p-button>
+            <div class="form-check form-switch worklabor-switch">
+                <label class="form-check-label" for="flexSwitchCheckChecked">Avanzado</label>
+                <input class="form-check-input" type="checkbox" [(ngModel)]="showWork" (click)="showWorkForm($event)"
+                    name="checkbox" id="flexSwitchCheckChecked">
             </div>
         </div>
     </form>
+    <app-modal-calculador-intro [showModal]="showModal"></app-modal-calculador-intro>
 </section>

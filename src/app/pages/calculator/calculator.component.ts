@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormObject } from 'src/app/models/Form';
+import Swal from 'sweetalert2';
 import { CalcService } from '../../services/calc.service';
+import { AuthService } from '../../services/auth.service';
+
+interface InputEvent {
+  originalEvent: PointerEvent;
+  value: number | string;
+}
 
 @Component({
   selector: 'app-calculator',
@@ -7,89 +15,21 @@ import { CalcService } from '../../services/calc.service';
   styleUrls: ['./calculator.component.css'],
 })
 export class CalculatorComponent implements OnInit {
-  formFields: any = {
-    pliegos: 0,
-    planchas: {
-      tipo: '',
-      cant: 0,
-      precio: 0,
-    },
-    papel: {
-      clase: '',
-      tamano: '',
-      cant: 0,
-      precio: 0,
-    },
-    maquina: {
-      tipo: '',
-      cant: 0,
-      precio: 0,
-    },
-    diseno: {
-      label: 'Diseño',
-      precio: 0,
-    },
-    numerada: {
-      label: 'Numerada',
-      precio: 0,
-    },
-    perforada: {
-      label: 'Perforada',
-      precio: 0,
-    },
-    troquelada: {
-      label: 'Troquelada',
-      precio: 0,
-    },
-    troquel: {
-      label: 'Troquel',
-      precio: 0,
-    },
-    encuadernacion: {
-      label: 'Encuadernación',
-      precio: 0,
-    },
-    plastificado: {
-      label: 'Plastificado',
-      precio: 0,
-    },
-    reservauv: {
-      label: 'Reserva UV',
-      precio: 0,
-    },
-    empaqueEnvio: {
-      label: 'Empaque y Envio',
-      precio: 0,
-    },
-    porcentaje: {
-      label: 'Porcentaje',
-      precio: 0,
-    },
-  };
+  showModal = false;
+  isResmilla = false;
+  showWork = false;
 
-  sizes = [
-    { label: 'No aplica', divider: 1 },
-    { label: '17.5x12.5 cms (1/32)', divider: 32 },
-    { label: '20x14 cms (1/25)', divider: 25 },
-    { label: '22x14 cms (1/22)', divider: 22 },
-    { label: '25x14 cms (1/20)', divider: 20 },
-    { label: '23x16.5 cms (1/18)', divider: 18 },
-    { label: '25x17.5 cms (1/16)', divider: 16 },
-    { label: '20x23 cms (1/15)', divider: 15 },
-    { label: '25x23 cms (1/12)', divider: 12 },
-    { label: '30x20 cms (1/11)', divider: 11 },
-    { label: '22x28 cms (1/10)', divider: 10 },
-    { label: '23x33 cms (1/9)', divider: 9 },
-    { label: '25x35 cms (1/8)', divider: 8 },
-    { label: '35x33 cms (1/6)', divider: 6 },
-    { label: '48x28 cms (1/5)', divider: 5 },
-    { label: '50x35 cms (1/4)', divider: 4 },
-    { label: '70x33 cms (1/3)', divider: 3 },
-    { label: '70x50 cms (1/2)', divider: 2 },
-    { label: '70x100 cms (1)', divider: 1 },
-  ];
+  pliegosCant: number | undefined;
+  planchasSelected: string | undefined;
+  planchasCant: number | undefined;
+  papelSelected: string | undefined;
+  papelTamano: number | undefined;
+  papelTamanosCant: number = 0;
+  maquinaSelected: string | undefined;
+  maquinaCant: number | undefined;
 
-  clients: any = [];
+  sizes: any[] = [];
+
   papersType: any = [];
   papersStructured: any = [];
   planchasType: any = [];
@@ -97,34 +37,20 @@ export class CalculatorComponent implements OnInit {
   machineType: any = [];
   machineStructured: any = [];
 
-  selectedClient = '';
-  value6: number | undefined;
-  workforceFields = [
-    'diseno',
-    'numerada',
-    'perforada',
-    'troquelada',
-    'troquel',
-    'encuadernacion',
-    'plastificado',
-    'reservauv',
-    'empaqueEnvio',
-  ];
-  PorcetajeGanacia: number | undefined;
-  constructor(private calcService: CalcService) {}
+  constructor(
+    private calcService: CalcService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.calcService.getClients().subscribe((resp: any) => {
-      if (resp.ok) {
-        const { results } = resp;
-        this.clients = results.Items;
-        console.log(this.clients);
-      }
-    });
+    this.retrieveMaterials();
+    this.sizes = this.calcService.getSizes();
+  }
+
+  retrieveMaterials() {
     this.calcService.getMaterials().subscribe((resp: any) => {
       if (resp.ok) {
         const { results } = resp;
-
         for (let item of results.Items) {
           if (item.type === 'papel') {
             this.papersType.push(item);
@@ -163,16 +89,160 @@ export class CalculatorComponent implements OnInit {
         .filter((object: any) => object.subtype === subtype)
         .map((object: any) => {
           return {
+            prodId: object.productId,
             label: object.label,
             name: object.name,
-            price: object.price,
           };
         });
       arrayStrutured.push(objectStructured);
     }
   }
 
+  showResponsiveDialog() {
+    this.showModal = !this.showModal;
+  }
+
   calculate() {
-    console.log(this.formFields);
+    if (!this.checkValues()) {
+      return;
+    }
+    let formObject: FormObject = {
+      plates: {
+        prodId: this.planchasSelected!,
+        cant: this.planchasCant!,
+      },
+      papper: {
+        prodId: this.papelSelected!,
+        cant: this.pliegosCant!,
+      },
+      sizes: {
+        size: this.papelTamano!,
+        cant: this.pliegosCant!,
+      },
+      machine: {
+        prodId: this.maquinaSelected!,
+        cant: this.maquinaCant!,
+      },
+    };
+    this.calcService.calculate(formObject).subscribe((resp: any) => {
+      if (resp.ok) {
+        let currency = Intl.NumberFormat('en-US');
+        let result = `<strong>$${currency.format(resp.result)} COP</strong>`;
+        Swal.fire(
+          'Calculado',
+          `El trabajo tiene un valor aproximado de ${result}, el valor puede variar dependiendo de la mano de obra que necesite tu trabajo, para mayor informacion comunicate`,
+          'success'
+        );
+      }
+    });
+  }
+
+  setSizes(event: InputEvent) {
+    if (!this.pliegosCant) {
+      Swal.fire(
+        'Cantidad de pliegos?',
+        'Se necesita conocer la cantidad de pliegos. Por favor pon cuantos pliegos o unidades requieres en tu trabajo',
+        'info'
+      );
+      setTimeout(() => {
+        this.papelTamano = 0;
+      }, 0);
+
+      return;
+    }
+
+    let sizeDivider = +event.value || 1;
+
+    this.papelTamanosCant = this.pliegosCant / sizeDivider;
+  }
+
+  papelType(event: InputEvent) {
+    let papelObj = this.papersType.find(
+      (papper: any) => papper.productId === event.value
+    );
+    this.isResmilla = false;
+    if (papelObj?.subtype === 'resmilla') {
+      this.isResmilla = true;
+      this.papelTamano = 0;
+      let unidades = this.pliegosCant || 1;
+      this.papelTamanosCant = unidades / 500;
+    }
+  }
+
+  setPliegos(event: any) {
+    let number = Number(event.target.value);
+    if (!this.papelTamano) {
+      this.papelTamanosCant = this.isResmilla ? number / 500 : 0;
+      return;
+    }
+    this.papelTamanosCant = number / this.papelTamano;
+  }
+
+  showWorkForm(event: MouseEvent) {
+    if (!this.authService.token) {
+      Swal.fire({
+        title: 'Requieres autorización ¿tienes alguna clave para seguir?',
+        input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off',
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Enviar',
+        showLoaderOnConfirm: true,
+        preConfirm: (token) => {
+          this.authService.validateToken(token).toPromise();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+      }).then((result: any) => {
+        if (result.value?.confirm) {
+          Swal.fire({
+            title: `Hola ${result.user}`,
+          });
+
+          this.showWork = true;
+        } else if (result.isConfirmed) {
+          Swal.fire(
+            'Está bien el código?',
+            'No pudimos confirmar el token ingresado',
+            'info'
+          );
+          this.showWork = false;
+        } else {
+          this.showWork = false;
+        }
+      });
+    }
+    this.showWork = false;
+  }
+
+  checkValues(): boolean {
+    if (
+      !this.papelSelected ||
+      !this.maquinaSelected ||
+      !this.planchasSelected
+    ) {
+      Swal.fire(
+        'Campos Faltantes',
+        'Por favor complete todos los campos',
+        'error'
+      );
+      return false;
+    }
+    if (
+      !this.planchasCant ||
+      this.planchasCant < 1 ||
+      !this.maquinaCant ||
+      this.maquinaCant < 1 ||
+      !this.pliegosCant ||
+      this.pliegosCant < 1
+    ) {
+      Swal.fire(
+        'Cant erronea',
+        'Las cantidades no pueden ser menor a 0',
+        'error'
+      );
+      return false;
+    }
+    return true;
   }
 }
