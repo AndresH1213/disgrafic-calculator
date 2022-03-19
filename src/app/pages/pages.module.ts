@@ -1,13 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
-import { FormsModule } from '@angular/forms';
-
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
-import { CascadeSelectModule } from 'primeng/cascadeselect';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CalculatorComponent } from './calculator/calculator.component';
 import { UsersComponent } from './users/users.component';
@@ -16,6 +10,9 @@ import { AboutComponent } from './about/about.component';
 import { ProductsComponent } from './products/products.component';
 import { PagesComponent } from './pages.component';
 import { RouterModule } from '@angular/router';
+import { ModalCalculadorIntroComponent } from './components/modal-calculador-intro/modal-calculador-intro.component';
+import { FormWorkLaborComponent } from './components/form-work-labor/form-work-labor.component';
+import { PrimengModule } from './primeng.module';
 
 @NgModule({
   declarations: [
@@ -25,18 +22,16 @@ import { RouterModule } from '@angular/router';
     HomeComponent,
     AboutComponent,
     ProductsComponent,
+    ModalCalculadorIntroComponent,
+    FormWorkLaborComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
     SharedModule,
     FormsModule,
-
-    ButtonModule,
-    InputTextModule,
-    CardModule,
-    DropdownModule,
-    CascadeSelectModule,
+    ReactiveFormsModule,
+    PrimengModule,
   ],
 })
 export class PagesModule {}

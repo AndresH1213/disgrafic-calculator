@@ -15,7 +15,7 @@ interface InputEvent {
   styleUrls: ['./calculator.component.css'],
 })
 export class CalculatorComponent implements OnInit {
-  showModal = false;
+  showModal = true;
   isResmilla = false;
   showWork = false;
 

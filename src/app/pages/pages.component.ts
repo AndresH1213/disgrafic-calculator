@@ -5,8 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './pages.component.html',
   styles: [
     `
-      .pages-body {
-        height: 60vh;
+      body {
+        margin-top: 80px;
       }
     `,
   ],
