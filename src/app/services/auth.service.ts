@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 const base_url = environment.baseUrl;
 
@@ -11,6 +11,8 @@ const base_url = environment.baseUrl;
   providedIn: 'root',
 })
 export class AuthService {
+  constructor(private http: HttpClient) {}
+
   get token() {
     return localStorage.getItem('token') || '';
   }
@@ -23,11 +25,22 @@ export class AuthService {
     };
   }
 
+  loginUser(form: any) {
+    const url = `${base_url}/auth/login`;
+    return this.http.post(url, form).pipe(
+      tap((resp: any) => {
+        this.saveLocalStorage(resp.token);
+      })
+    );
+  }
+
+  logOut() {
+    localStorage.removeItem('an-token');
+  }
+
   saveLocalStorage(token: string) {
     localStorage.setItem('token', token);
   }
-
-  constructor(private http: HttpClient) {}
 
   validateToken(token: string): Observable<boolean> {
     return this.http
