@@ -1,29 +1,54 @@
 section {
   overflow-y: hidden;
   overflow-x: hidden;
+  width:80%;
+  height: 500px;
 }
-
+.content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+p {
+  font-size: 18px;
+}
 .description-container {
-  position: block;
-  left: 10%;
   width: 50%;
 }
 
 .about-image {
-  width: 45%;
-  min-width: 300px;
-  position: absolute;
-  right: 5%;
-  top: 20%;
+  max-width: 400px;
+  max-height: 300px;
+  margin:auto;
+}
+
+@media only screen and (max-width: 1062px) {
+  .description-container {
+    width: 80%;
+  }
+  .content {
+    margin-top: -250px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .description-container {
+    width: 70%;
+    margin: auto;
+  }
+  .about-image {
+    width: 80%;
+    height: 90%;
+  }
 }
 
 @media only screen and (max-width: 400px) {
-  .about-image {
-    display: none;
-  }
   .description-container {
-    width: 90%;
-    margin: auto;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  .about-image {
+    width: 80%;
   }
 }
 
@@ -31,7 +56,7 @@ section {
 .glowing {
   position: relative;
   min-width: 700px;
-  height: calc(100vh - 240px);
+  height: 400px;
   margin: -150px;
   transform-origin: right;
   animation: colorChange 5s linear infinite;
