@@ -8,10 +8,9 @@ import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { PagenotfoundComponent } from './404/pagenotfound/pagenotfound.component';
-import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
-  declarations: [AppComponent, PagenotfoundComponent, AuthComponent],
+  declarations: [AppComponent, PagenotfoundComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
