@@ -190,13 +190,15 @@ export class CalculatorComponent implements OnInit {
         confirmButtonText: 'Enviar',
         showLoaderOnConfirm: true,
         preConfirm: (token) => {
-          this.authService.validateToken(token).toPromise();
+          // this.authService.validateToken(token).toPromise();
+          return { confirm: true, user: 'andres' };
         },
         allowOutsideClick: () => !Swal.isLoading(),
       }).then((result: any) => {
+        console.log(result);
         if (result.value?.confirm) {
           Swal.fire({
-            title: `Hola ${result.user}`,
+            title: `Hola ${result.value.user}`,
           });
 
           this.showWork = true;

@@ -14,7 +14,6 @@ import { CarouselModule } from 'primeng/carousel';
   declarations: [],
   imports: [
     CommonModule,
-
     ButtonModule,
     InputTextModule,
     CardModule,

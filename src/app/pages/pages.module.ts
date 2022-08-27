@@ -13,6 +13,8 @@ import { RouterModule } from '@angular/router';
 import { ModalCalculadorIntroComponent } from './components/modal-calculador-intro/modal-calculador-intro.component';
 import { FormWorkLaborComponent } from './components/form-work-labor/form-work-labor.component';
 import { PrimengModule } from './primeng.module';
+import { AuthComponent } from './auth/auth.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { PrimengModule } from './primeng.module';
     CalculatorComponent,
     UsersComponent,
     HomeComponent,
+    AuthComponent,
+    AdminComponent,
     AboutComponent,
     ProductsComponent,
     ModalCalculadorIntroComponent,
