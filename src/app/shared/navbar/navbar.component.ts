@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit {
     this.items = [
       { label: 'Inicio', icon: 'pi pi-home', routerLink: '/' },
       { label: 'Productos', icon: 'pi pi-products', routerLink: '/products' },
-      { label: 'Calculadora', icon: 'pi pi-plus', routerLink: '/calculator' },
+      { label: 'Imprenta', icon: 'pi pi-plus', routerLink: '/imprent' },
       { label: 'Nosotros', icon: 'pi pi-download', routerLink: '/about' },
       this.isAuth
         ? { label: 'Usuarios', icon: 'pi pi-refresh', routerLink: '/users' }

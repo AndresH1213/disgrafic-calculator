@@ -1,15 +1,18 @@
 <nav>
     <div>
-        <img class="nav-logo" src="assets/images/Disgrafic.jpg" alt="">
+        <img class="nav-logo" routerLink="/" src="assets/images/Disgrafic.jpg" alt="">
     </div>
     <div class="navbar-items-container">
         <ul>
             <li class="nav-items"><a routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}"
                     routerLink="/">Inicio</a></li>
             <li class="nav-items"><a routerLinkActive="active-link" routerLink="/products">Productos</a></li>
-            <li class="nav-items"><a routerLinkActive="active-link" routerLink="/calculator">Calculadora</a></li>
+            <li class="nav-items"><a routerLinkActive="active-link" routerLink="/imprent">Imprenta</a></li>
             <li *ngIf="isAuth" class="nav-items"><a routerLinkActive="active-link" routerLink="/users">Clientes</a></li>
             <li class="nav-items"><a routerLinkActive="active-link" routerLink="/about">Sobre Nosotros</a></li>
+            <li class="nav-items"><a routerLinkActive="active-link" routerLink="/admin">Admin</a></li>
+            <li class="nav-items"><a routerLinkActive="active-link" routerLink="/auth"><span
+                        class="pi pi-sign-in"></span></a></li>
         </ul>
     </div>
     <div class="navbar-menu">

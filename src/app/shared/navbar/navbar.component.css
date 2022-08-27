@@ -17,6 +17,7 @@ nav {
 .nav-logo {
   width: 140px;
   aspect-ratio: 2.2;
+  cursor: pointer;
   margin: 2px;
   border-radius: 0.5em;
 }
