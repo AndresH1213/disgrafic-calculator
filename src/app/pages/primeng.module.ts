@@ -9,6 +9,7 @@ import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CarouselModule } from 'primeng/carousel';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [],
@@ -22,6 +23,7 @@ import { CarouselModule } from 'primeng/carousel';
     DialogModule,
     InputNumberModule,
     CarouselModule,
+    TableModule,
   ],
   exports: [
     ButtonModule,
@@ -32,6 +34,7 @@ import { CarouselModule } from 'primeng/carousel';
     DialogModule,
     InputNumberModule,
     CarouselModule,
+    TableModule,
   ],
 })
 export class PrimengModule {}

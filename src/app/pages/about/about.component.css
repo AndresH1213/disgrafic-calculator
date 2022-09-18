@@ -1,25 +1,25 @@
-section {
+.page-content {
   overflow-y: hidden;
   overflow-x: hidden;
-  width:80%;
-  height: 500px;
+  background-image: url('/assets/images/background.jfif');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: calc(100vh - 80px - 160px);
 }
 .content {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-}
-p {
-  font-size: 18px;
+  justify-content: center;
+  align-self: center;
 }
 .description-container {
   width: 50%;
 }
 
 .about-image {
-  max-width: 400px;
-  max-height: 300px;
-  margin:auto;
+  max-width: 20vw;
+  margin:0;
 }
 
 @media only screen and (max-width: 1062px) {
@@ -37,8 +37,7 @@ p {
     margin: auto;
   }
   .about-image {
-    width: 80%;
-    height: 90%;
+    display: none;
   }
 }
 

@@ -1,6 +1,5 @@
-section {
+.home-content {
   display: grid;
-  padding: 50px;
   grid-template-columns: 1fr 1fr;
   align-content: center;
   place-items: center;
@@ -16,12 +15,10 @@ p-button {
 .landing-title {
   text-align: center;
   font-family: var(--font-main);
-  font-size: 2.5rem;
   font-weight: 700;
 }
 
 .landing-description {
-  font-size: medium;
   padding: 10px 30px;
   margin-left: 10px;
   font-weight: 500;
@@ -36,15 +33,13 @@ p-button {
 
 .waves {
   position: absolute;
-  bottom: 15%;
-  grid-column: 1/-1;
+  bottom: 0;
+  z-index: -1;
 }
 
 @media only screen and (max-width: 700px) {
-  section {
-    padding: 20px;
+  .home-content {
     grid-template-columns: 2fr;
-    color: var(--black-color);
   }
   .image-home {
     margin-top: 20px;
@@ -52,21 +47,17 @@ p-button {
     border-radius: 2em;
   }
   .landing-description {
-    font-weight: 700;
     padding: 10px 15px;
-  }
-
-  .waves {
-    bottom: 5%;
   }
 }
 
 @media only screen and (max-width: 510px) {
-  section {
+  .home-content{
     padding: 0px;
   }
   .image-home {
     width: 100%;
+    height: 100px;
   }
   .landing-title {
     font-size: 2rem;

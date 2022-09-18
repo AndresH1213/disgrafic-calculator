@@ -15,6 +15,7 @@ import { FormWorkLaborComponent } from './components/form-work-labor/form-work-l
 import { PrimengModule } from './primeng.module';
 import { AuthComponent } from './auth/auth.component';
 import { AdminComponent } from './admin/admin.component';
+import { ModalAdminProductComponent } from './components/modal-admin-product/modal-admin-product.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { AdminComponent } from './admin/admin.component';
     ProductsComponent,
     ModalCalculadorIntroComponent,
     FormWorkLaborComponent,
+    ModalAdminProductComponent,
   ],
   imports: [
     CommonModule,
