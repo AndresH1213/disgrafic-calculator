@@ -1,40 +1,28 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { FormObject } from '../models/Form';
-
-const baseUrl = environment.baseUrl;
+import { getBaseUrl, getHeaders } from './utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CalcService {
-  get headers() {
-    return {
-      headers: new HttpHeaders({
-        contentType: 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        Accept: '*/*',
-      }),
-    };
-  }
+  headers: any;
+  baseUrl: string;
 
-  constructor(private http: HttpClient) {}
-
-  getMaterials() {
-    const url = `${baseUrl}/products`;
-    return this.http.get(url, this.headers);
-  }
-
-  getClients() {
-    const url = `${baseUrl}/clients`;
-    return this.http.get(url, this.headers);
+  constructor(private http: HttpClient) {
+    this.headers = getHeaders();
+    this.baseUrl = getBaseUrl();
   }
 
   calculate(form: FormObject) {
-    const url = `${baseUrl}/calculate`;
+    const url = `${this.baseUrl}/calculate`;
     let object = { form };
     return this.http.post(url, object, this.headers);
+  }
+
+  getMaterials() {
+    return this.http.get(this.baseUrl);
   }
 
   getSizes() {

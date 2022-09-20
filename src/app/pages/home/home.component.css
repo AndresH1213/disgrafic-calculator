@@ -37,13 +37,30 @@ p-button {
   z-index: -1;
 }
 
+@media only screen and (max-width: 1300px) {
+  .image-home {
+    height: 20vh;
+    width: 50vw;
+  }
+
+  .landing-description {
+    font-size: 1.2rem;
+  }
+
+  .home-content {
+    color: black;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+}
+
 @media only screen and (max-width: 700px) {
   .home-content {
     grid-template-columns: 2fr;
   }
   .image-home {
     margin-top: 20px;
-    width: 90%;
+    width:  60vw;
     border-radius: 2em;
   }
   .landing-description {
@@ -60,7 +77,6 @@ p-button {
     height: 100px;
   }
   .landing-title {
-    font-size: 2rem;
     padding-top: 10px;
   }
 }

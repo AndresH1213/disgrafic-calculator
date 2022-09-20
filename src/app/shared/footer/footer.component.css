@@ -71,11 +71,11 @@
 .footer-links__contact > div {
   position: absolute;
   padding: 10px 10px;
-  width: 110px;
+  width: 120px;
   background-color: var(--black-color);
   opacity: 0.9;
   border-radius: 1.2em;
-  top: -80px;
+  top: -85px;
   left: -5px;
 }
 

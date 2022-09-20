@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CalcService } from '../../../services/calc.service';
+import { ClientsService } from '../../../services/clients.service';
 
 @Component({
   selector: 'app-form-work-labor',
@@ -64,10 +65,13 @@ export class FormWorkLaborComponent implements OnInit {
   clients: any = [];
 
   PorcetajeGanacia: number | undefined;
-  constructor(private calcService: CalcService) {}
+  constructor(
+    private calcService: CalcService,
+    private clientsService: ClientsService
+  ) {}
 
   ngOnInit(): void {
-    this.calcService.getClients().subscribe((resp: any) => {
+    this.clientsService.getClients().subscribe((resp: any) => {
       if (resp.ok) {
         const { results } = resp;
         this.clients = results.Items;

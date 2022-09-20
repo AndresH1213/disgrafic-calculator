@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Product } from '../../interfaces/Product';
+import { Client } from '../../interfaces/Client';
+import { ClientsService } from '../../services/clients.service';
 
 @Component({
   selector: 'app-admin',
@@ -6,12 +9,39 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin.component.css'],
 })
 export class AdminComponent implements OnInit {
-  constructor() {}
+  public displayModalProduct = false;
+  public displayModalClient = false;
+
+  public displayOptionsContainer = true;
+  public displayProductsContainer = false;
+  public displayClientsContainer = false;
+
+  public showError = false;
+  public isEdit = false;
+  public image: any;
+
+  public clients: Client[] = [];
+  // public products: Product[] = [];
+
+  public selectedProduct?: Product;
+  public selectedClient?: Client;
+
+  productName = '';
+  productLabel = '';
+  productPrice = 0;
+  productImage = '';
+
+  clientName = '';
+  clientPhone = '';
+  clientEmail = '';
+  clientAddress = '';
+
+  constructor(private clientsService: ClientsService) {}
 
   ngOnInit(): void {}
 
   editProduct(id: number) {
-    console.log('editing' + id);
+    this.openProductModal(true);
   }
 
   deleteProduct(id: number) {
@@ -19,7 +49,7 @@ export class AdminComponent implements OnInit {
   }
 
   editClient(id: number) {
-    console.log(id);
+    this.openClientModal(true);
   }
 
   products = [
@@ -54,20 +84,45 @@ export class AdminComponent implements OnInit {
     },
   ];
 
-  clients = [
-    {
-      id: 1,
-      name: 'Jonh Doe',
-      phone: '33000',
-      email: 'testring@email.com',
-      address: 'calle false 123',
-    },
-    {
-      id: 1,
-      name: 'Jonh Doe',
-      phone: '33000',
-      email: 'testring@email.com',
-      address: 'calle false 123',
-    },
-  ];
+  showOptions() {
+    this.displayClientsContainer = false;
+    this.displayProductsContainer = false;
+    this.displayOptionsContainer = true;
+  }
+
+  showProducts() {
+    this.displayClientsContainer = false;
+    this.displayOptionsContainer = false;
+    this.displayProductsContainer = true;
+  }
+
+  showClients() {
+    this.displayProductsContainer = false;
+    this.displayOptionsContainer = false;
+    this.displayClientsContainer = true;
+
+    if (this.clients.length === 0) {
+      this.clientsService.getClients().subscribe((resp: any) => {
+        this.clients = resp.clients;
+      });
+    }
+  }
+
+  openProductModal(isEdit?: boolean) {
+    this.isEdit = isEdit || false;
+    this.displayModalProduct = true;
+  }
+
+  openClientModal(isEdit?: boolean) {
+    this.isEdit = isEdit || false;
+    this.displayModalClient = true;
+  }
+
+  createProduct() {
+    this.displayModalProduct = false;
+  }
+
+  createClient() {
+    this.displayModalClient = false;
+  }
 }

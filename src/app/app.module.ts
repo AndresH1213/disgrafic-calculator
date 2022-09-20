@@ -8,6 +8,7 @@ import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { PagenotfoundComponent } from './404/pagenotfound/pagenotfound.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, PagenotfoundComponent],
@@ -15,6 +16,7 @@ import { PagenotfoundComponent } from './404/pagenotfound/pagenotfound.component
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     HttpClientModule,
     SharedModule,
   ],

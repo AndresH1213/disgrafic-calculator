@@ -1,9 +1,9 @@
-<div class="admin-container" *ngIf="false">
-  <div class="admin-options">
+<div class="admin-container" *ngIf="displayOptionsContainer">
+  <div class="admin-options" (click)="showProducts()">
     <h2>Products</h2>
     <img class="admin-option_img" src="assets/images/admin_products.svg" alt="products vector">
   </div>
-  <div class="admin-options separate-line">
+  <div class="admin-options separate-line" (click)="showClients()">
     <h2>Clients</h2>
     <img class="admin-option_img" src="assets/images/admin_clients.svg" alt="clients vector">
   </div>
@@ -11,12 +11,13 @@
 
 <!-- product -->
 
-<div class="admin-container" *ngIf="false">
+<div class="admin-container" *ngIf="displayProductsContainer">
   <p-table [value]="products" responsiveLayout="scroll">
     <ng-template pTemplate="caption">
       <div class="jt-cont-between">
+        <p-button icon="pi pi-backward" (click)="showOptions()"></p-button>
         Productos
-        <p-button>Agregar<span class="pi pi-plus icons"></span></p-button>
+        <p-button (click)="openProductModal()">Agregar<span class="pi pi-plus icons"></span></p-button>
         <p-button icon="pi pi-refresh"></p-button>
       </div>
     </ng-template>
@@ -53,12 +54,13 @@
 
 <!-- clients  -->
 
-<div class="admin-container" *ngIf="true">
+<div class="admin-container" *ngIf="displayClientsContainer">
   <p-table [value]="clients" responsiveLayout="scroll">
     <ng-template pTemplate="caption">
       <div class="jt-cont-between">
+        <p-button icon="pi pi-backward" (click)="showOptions()"></p-button>
         Clientes
-        <p-button>Agregar<span class="pi pi-plus icons"></span></p-button>
+        <p-button (click)="openClientModal()">Agregar<span class="pi pi-plus icons"></span></p-button>
         <p-button icon="pi pi-refresh"></p-button>
       </div>
     </ng-template>
@@ -88,4 +90,71 @@
       </div>
     </ng-template>
   </p-table>
+</div>
+
+
+<div *ngIf="displayModalProduct">
+  <p-dialog header="{{isEdit ? 'Actualizar Producto' : 'Crear Producto'}}" [(visible)]="displayModalProduct"
+    [modal]="true" [style]="{width: '40vw'}" [draggable]="false" [closable]="false" [resizable]="false">
+    <i class="pi pi-times close-icon" (click)="displayModalProduct=false"></i>
+    <div *ngIf="showError" class="error-message">
+      Debes llenar todos los campos
+    </div>
+    <form autocomplete="off">
+      <div class="form-controls">
+        <label for="name">Nombre</label>
+        <input type="text" name="name" [(ngModel)]="productName" placeholder="Nombre">
+      </div>
+      <div class="form-controls">
+        <label for="label">Etiqueta</label>
+        <input type="text" name="label" [(ngModel)]="productLabel" placeholder="Etiqueta">
+      </div>
+      <div class="form-controls">
+        <label for="price">Precio</label>
+        <input type="number" name="price" [(ngModel)]="productPrice" placeholder="Precio">
+      </div>
+      <div class="form-controls">
+        <label for="image">Imagen</label>
+        <input type="file" name="image" [(ngModel)]="productImage" placeholder="Imagen">
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <button (click)="createProduct()" class="p-button-text">
+        {{isEdit ? 'Actualizar' : 'Crear'}}
+      </button>
+    </ng-template>
+  </p-dialog>
+</div>
+
+<div *ngIf="displayModalClient">
+  <p-dialog header="{{isEdit ? 'Actualizar Cliente' : 'Crear Cliente'}}" [(visible)]="displayModalClient" [modal]="true"
+    [style]="{width: '40vw'}" [draggable]="false" [closable]="false" [resizable]="false">
+    <i class="pi pi-times close-icon" (click)="displayModalClient=false"></i>
+    <div *ngIf="showError" class="error-message">
+      Debes llenar todos los campos
+    </div>
+    <form autocomplete="off">
+      <div class="form-controls">
+        <label for="name">Nombre</label>
+        <input type="text" name="name" [(ngModel)]="clientName" placeholder="Nombre">
+      </div>
+      <div class="form-controls">
+        <label for="price">Telefono</label>
+        <input type="text" name="price" [(ngModel)]="clientPhone" placeholder="Telefono">
+      </div>
+      <div class="form-controls">
+        <label for="email">Email</label>
+        <input type="text" name="email" [(ngModel)]="clientPhone" placeholder="Email">
+      </div>
+      <div class="form-controls">
+        <label for="address">Direccion</label>
+        <input type="text" name="address" [(ngModel)]="clientAddress" placeholder="Direccion">
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <button (click)="createClient()" class="p-button-text">
+        {{isEdit ? 'Actualizar' : 'Crear'}}
+      </button>
+    </ng-template>
+  </p-dialog>
 </div>
