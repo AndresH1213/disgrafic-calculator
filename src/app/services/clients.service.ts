@@ -11,28 +11,27 @@ export class ClientsService {
   baseUrl: string;
 
   constructor(private http: HttpClient) {
-    this.headers = getHeaders();
+    // this.headers = getHeaders();
     this.baseUrl = getBaseUrl();
   }
 
   getClients() {
     const url = `${this.baseUrl}/client`;
-    console.log(this.headers);
-    return this.http.get(url, this.headers);
+    return this.http.get(url);
   }
 
   getClient(id: string) {
-    const url = `${this.baseUrl}/client` + id;
-    return this.http.get(url, this.headers);
+    const url = `${this.baseUrl}/client/` + id;
+    return this.http.get(url);
   }
 
   createClient(client: Client) {
     const url = `${this.baseUrl}/client`;
-    return this.http.post(url, client, this.headers);
+    return this.http.post(url, { ...client });
   }
 
-  updateClient(attrs: any) {
-    const url = `${this.baseUrl}/client`;
-    return this.http.put(url, attrs, this.headers);
+  updateClient(id: string, attrs: any) {
+    const url = `${this.baseUrl}/client/` + id;
+    return this.http.put(url, attrs);
   }
 }
