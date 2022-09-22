@@ -18,7 +18,7 @@
         <p-button icon="pi pi-backward" (click)="showOptions()"></p-button>
         Productos
         <p-button (click)="openProductModal()">Agregar<span class="pi pi-plus icons"></span></p-button>
-        <p-button icon="pi pi-refresh"></p-button>
+        <p-button icon="pi pi-refresh" (click)="loadProducts()"></p-button>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -39,12 +39,12 @@
         <td>{{product.subtype}}</td>
         <td>{{product.price}}</td>
         <td>
-          <i class="pi pi-pencil icons" (click)="editProduct(product.id)"></i>
-          <i class="pi pi-trash icons" (click)="deleteProduct(product.id)"></i>
+          <i class="pi pi-pencil icons" (click)="editProduct(product.product_id)"></i>
+          <i class="pi pi-trash icons" (click)="deleteProduct(product.product_id)"></i>
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="summary">
+    <ng-template pTemplate=" summary">
       <div class="jt-cont-between">
         In total there are {{products ? products.length : 0 }} products.
       </div>
@@ -61,7 +61,7 @@
         <p-button icon="pi pi-backward" (click)="showOptions()"></p-button>
         Clientes
         <p-button (click)="openClientModal()">Agregar<span class="pi pi-plus icons"></span></p-button>
-        <p-button icon="pi pi-refresh"></p-button>
+        <p-button icon="pi pi-refresh" (click)="loadClients()"></p-button>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -80,7 +80,7 @@
         <td>{{client.email}}</td>
         <td>{{client.address}}</td>
         <td>
-          <i class="pi pi-pencil icons" (click)="editClient(client.id)"></i>
+          <i class="pi pi-pencil icons" (click)="editClient(client.client_id)"></i>
         </td>
       </tr>
     </ng-template>
@@ -100,22 +100,34 @@
     <div *ngIf="showError" class="error-message">
       Debes llenar todos los campos
     </div>
-    <form autocomplete="off">
+    <form (ngSubmit)="createProduct()" #productForm="ngForm" autocomplete="off">
       <div class="form-controls">
         <label for="name">Nombre</label>
-        <input type="text" name="name" [(ngModel)]="productName" placeholder="Nombre">
+        <input type="text" name="name" [(ngModel)]="productInitForm.name" required minlength="4" placeholder="Nombre">
       </div>
       <div class="form-controls">
         <label for="label">Etiqueta</label>
-        <input type="text" name="label" [(ngModel)]="productLabel" placeholder="Etiqueta">
+        <input type="text" name="label" [(ngModel)]="productInitForm.label" required minlength="4"
+          placeholder="Etiqueta">
       </div>
       <div class="form-controls">
         <label for="price">Precio</label>
-        <input type="number" name="price" [(ngModel)]="productPrice" placeholder="Precio">
+        <input type="number" name="price" [(ngModel)]="productInitForm.price" required min="0" placeholder="Precio">
+      </div>
+      <div class="form-controls">
+        <label for="type">Tipo</label>
+        <input type="text" name="product_type" [(ngModel)]="productInitForm.product_type" required minlength="4"
+          placeholder="Tipo">
+      </div>
+      <div class="form-controls">
+        <label for="subtype">Subtipo</label>
+        <input type="text" name="subtype" [(ngModel)]="productInitForm.subtype" required minlength="4"
+          placeholder="Subtipo">
       </div>
       <div class="form-controls">
         <label for="image">Imagen</label>
-        <input type="file" name="image" [(ngModel)]="productImage" placeholder="Imagen">
+        <input type="file" name="image_url" (change)="changeImage($event.target)"
+          [(ngModel)]="productInitForm.image_url" placeholder="Imagen">
       </div>
     </form>
     <ng-template pTemplate="footer">
@@ -133,26 +145,29 @@
     <div *ngIf="showError" class="error-message">
       Debes llenar todos los campos
     </div>
-    <form autocomplete="off">
+    <form (ngSubmit)="createClient()" #clientForm="ngForm" autocomplete="off">
       <div class="form-controls">
         <label for="name">Nombre</label>
-        <input type="text" name="name" [(ngModel)]="clientName" placeholder="Nombre">
+        <input type="text" name="name" [(ngModel)]="clientInitForm.name" required minlength="4" placeholder="Nombre">
       </div>
       <div class="form-controls">
-        <label for="price">Telefono</label>
-        <input type="text" name="price" [(ngModel)]="clientPhone" placeholder="Telefono">
+        <label for="phone">Telefono</label>
+        <input type="text" name="phone" [(ngModel)]="clientInitForm.phone" required minlength="4"
+          placeholder="Telefono">
       </div>
       <div class="form-controls">
         <label for="email">Email</label>
-        <input type="text" name="email" [(ngModel)]="clientPhone" placeholder="Email">
+        <input type="text" name="email" [(ngModel)]="clientInitForm.email" required minlength="8" placeholder="Email">
       </div>
       <div class="form-controls">
         <label for="address">Direccion</label>
-        <input type="text" name="address" [(ngModel)]="clientAddress" placeholder="Direccion">
+        <input type="text" name="address" [(ngModel)]="clientInitForm.address" required minlength="4"
+          placeholder="Direccion">
       </div>
     </form>
     <ng-template pTemplate="footer">
-      <button (click)="createClient()" class="p-button-text">
+      <button (click)="isEdit ? updateClient() : createClient()"
+        class="{{clientForm.valid ? 'pbutton-valid' : 'pbutton-invalid' }}">
         {{isEdit ? 'Actualizar' : 'Crear'}}
       </button>
     </ng-template>

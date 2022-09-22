@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../interfaces/Product';
-import { Client } from '../../interfaces/Client';
+import { Client, listClients } from '../../interfaces/Client';
 import { ClientsService } from '../../services/clients.service';
+import { NgForm } from '@angular/forms';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-admin',
@@ -9,6 +11,9 @@ import { ClientsService } from '../../services/clients.service';
   styleUrls: ['./admin.component.css'],
 })
 export class AdminComponent implements OnInit {
+  @ViewChild('clientForm') clientForm!: NgForm;
+  @ViewChild('productForm') productForm!: NgForm;
+
   public displayModalProduct = false;
   public displayModalClient = false;
 
@@ -21,68 +26,33 @@ export class AdminComponent implements OnInit {
   public image: any;
 
   public clients: Client[] = [];
-  // public products: Product[] = [];
+  public products: Product[] = [];
 
   public selectedProduct?: Product;
   public selectedClient?: Client;
 
-  productName = '';
-  productLabel = '';
-  productPrice = 0;
-  productImage = '';
+  productInitForm: Product = {
+    name: '',
+    label: '',
+    price: 0,
+    product_type: '',
+    subtype: '',
+    image_url: '',
+  };
 
-  clientName = '';
-  clientPhone = '';
-  clientEmail = '';
-  clientAddress = '';
+  clientInitForm: Client = {
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+  };
 
-  constructor(private clientsService: ClientsService) {}
+  constructor(
+    private productService: ProductsService,
+    private clientsService: ClientsService
+  ) {}
 
   ngOnInit(): void {}
-
-  editProduct(id: number) {
-    this.openProductModal(true);
-  }
-
-  deleteProduct(id: number) {
-    console.log('editing' + id);
-  }
-
-  editClient(id: number) {
-    this.openClientModal(true);
-  }
-
-  products = [
-    {
-      id: 1,
-      name: 'best product',
-      product_type: 'top level',
-      subtype: 'something',
-      price: 10000,
-    },
-    {
-      id: 2,
-      name: 'best product',
-      img: true,
-      product_type: 'top level',
-      subtype: 'something',
-      price: 10000,
-    },
-    {
-      id: 3,
-      name: 'best product',
-      product_type: 'top level',
-      subtype: 'something',
-      price: 10000,
-    },
-    {
-      id: 4,
-      name: 'best product',
-      product_type: 'top level',
-      subtype: 'something',
-      price: 10000,
-    },
-  ];
 
   showOptions() {
     this.displayClientsContainer = false;
@@ -94,6 +64,10 @@ export class AdminComponent implements OnInit {
     this.displayClientsContainer = false;
     this.displayOptionsContainer = false;
     this.displayProductsContainer = true;
+
+    if (this.products.length === 0) {
+      this.loadProducts();
+    }
   }
 
   showClients() {
@@ -102,10 +76,31 @@ export class AdminComponent implements OnInit {
     this.displayClientsContainer = true;
 
     if (this.clients.length === 0) {
-      this.clientsService.getClients().subscribe((resp: any) => {
-        this.clients = resp.clients;
-      });
+      this.loadClients();
     }
+  }
+
+  editProduct(id: string) {
+    this.selectedProduct = this.products.filter(
+      (product) => product.product_id === id
+    )[0];
+
+    this.openProductModal(true);
+    this.productInitForm = { ...this.selectedProduct };
+  }
+
+  deleteProduct(id: string) {
+    if (confirm('En serio quieres eliminar este producto?')) {
+      this.productService.deleteProduct(id).subscribe();
+    }
+  }
+
+  editClient(id: string) {
+    this.selectedClient = this.clients.filter(
+      (client) => client.client_id === id
+    )[0];
+    this.openClientModal(true);
+    this.clientInitForm = { ...this.selectedClient };
   }
 
   openProductModal(isEdit?: boolean) {
@@ -119,10 +114,71 @@ export class AdminComponent implements OnInit {
   }
 
   createProduct() {
-    this.displayModalProduct = false;
+    if (!this.productForm.valid) {
+      this.showError = true;
+      setTimeout(() => (this.showError = false), 2500);
+      return;
+    }
+    const { image_url, ...restForm } = this.productForm.value;
+    console.log('image', image_url);
+    // this.productService.createProduct(restForm).subscribe((resp) => {
+    //   console.log(resp);
+    //   alert('Has creado un nuevo producto');
+    // });
+  }
+
+  changeImage(target: any) {
+    console.log(target.files);
   }
 
   createClient() {
-    this.displayModalClient = false;
+    if (!this.clientForm.valid) {
+      this.showError = true;
+      setTimeout(() => (this.showError = false), 2500);
+      return;
+    }
+
+    this.clientsService
+      .createClient(this.clientForm.value)
+      .subscribe((resp) => {
+        console.log(resp);
+        alert('Has creado un nuevo cliente');
+      });
+  }
+
+  updateClient() {
+    const id = this.selectedClient?.client_id!;
+    const attrs = this.clientForm.value;
+    this.clientsService.updateClient(id, attrs).subscribe((resp) => {
+      this.selectedClient = undefined;
+      this.displayModalClient = false;
+      this.isEdit = false;
+      this.clientForm.reset();
+      this.loadClients();
+    });
+  }
+
+  loadProducts() {
+    this.productService.getProducts().subscribe((resp: any) => {
+      this.products = resp.products;
+    });
+  }
+
+  loadClients() {
+    this.clientsService.getClients().subscribe((resp: any) => {
+      this.clients = resp.clients;
+    });
+  }
+
+  getProduct(id: string) {
+    this.productService.getProduct(id).subscribe((product: any) => {
+      this.selectedProduct = product;
+    });
+  }
+
+  getClient(id: string) {
+    this.clientsService.getClient(id).subscribe((client: any) => {
+      this.selectedClient = client;
+    });
   }
 }
