@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CarouselModule } from 'primeng/carousel';
 import { TableModule } from 'primeng/table';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [],
@@ -23,6 +24,7 @@ import { TableModule } from 'primeng/table';
     DialogModule,
     InputNumberModule,
     CarouselModule,
+    ProgressSpinnerModule,
     TableModule,
   ],
   exports: [
@@ -34,6 +36,7 @@ import { TableModule } from 'primeng/table';
     DialogModule,
     InputNumberModule,
     CarouselModule,
+    ProgressSpinnerModule,
     TableModule,
   ],
 })
