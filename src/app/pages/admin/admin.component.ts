@@ -4,6 +4,9 @@ import { Client, listClients } from '../../interfaces/Client';
 import { ClientsService } from '../../services/clients.service';
 import { NgForm } from '@angular/forms';
 import { ProductsService } from '../../services/products.service';
+import { PhotoService } from '../../services/photo.service';
+import { concatMap, filter, catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -22,8 +25,10 @@ export class AdminComponent implements OnInit {
   public displayClientsContainer = false;
 
   public showError = false;
+  public showSpinnerProduct = false;
+  public showSpinnerClient = false;
   public isEdit = false;
-  public image: any;
+  public image?: any;
 
   public clients: Client[] = [];
   public products: Product[] = [];
@@ -31,28 +36,40 @@ export class AdminComponent implements OnInit {
   public selectedProduct?: Product;
   public selectedClient?: Client;
 
-  productInitForm: Product = {
-    name: '',
-    label: '',
-    price: 0,
-    product_type: '',
-    subtype: '',
-    image_url: '',
-  };
+  productFormObj: Product;
 
-  clientInitForm: Client = {
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-  };
+  clientFormObj: Client;
 
   constructor(
     private productService: ProductsService,
-    private clientsService: ClientsService
-  ) {}
+    private clientsService: ClientsService,
+    private photoService: PhotoService
+  ) {
+    this.productFormObj = this.getProductInitForm();
+    this.clientFormObj = this.getClientInitForm();
+  }
 
   ngOnInit(): void {}
+
+  getProductInitForm(): Product {
+    return {
+      name: '',
+      label: '',
+      price: 0,
+      product_type: '',
+      subtype: '',
+      image_url: '',
+    };
+  }
+
+  getClientInitForm(): Client {
+    return {
+      name: '',
+      phone: '',
+      email: '',
+      address: '',
+    };
+  }
 
   showOptions() {
     this.displayClientsContainer = false;
@@ -66,6 +83,7 @@ export class AdminComponent implements OnInit {
     this.displayProductsContainer = true;
 
     if (this.products.length === 0) {
+      this.showSpinnerProduct = true;
       this.loadProducts();
     }
   }
@@ -76,23 +94,25 @@ export class AdminComponent implements OnInit {
     this.displayClientsContainer = true;
 
     if (this.clients.length === 0) {
+      this.showSpinnerClient = true;
       this.loadClients();
     }
   }
 
-  editProduct(id: string) {
-    this.selectedProduct = this.products.filter(
-      (product) => product.product_id === id
-    )[0];
-
-    this.openProductModal(true);
-    this.productInitForm = { ...this.selectedProduct };
+  getById<T>(id: string, entity: 'Product' | 'Client'): T {
+    let item: any;
+    if (entity === 'Product') {
+      item = this.products.filter((product) => product.product_id === id)[0];
+    } else {
+      item = this.clients.filter((client) => client.client_id === id)[0];
+    }
+    return item;
   }
 
-  deleteProduct(id: string) {
-    if (confirm('En serio quieres eliminar este producto?')) {
-      this.productService.deleteProduct(id).subscribe();
-    }
+  editProduct(id: string) {
+    this.selectedProduct = this.getById<Product>(id, 'Product');
+    this.openProductModal(true);
+    this.productFormObj = { ...this.selectedProduct };
   }
 
   editClient(id: string) {
@@ -100,7 +120,7 @@ export class AdminComponent implements OnInit {
       (client) => client.client_id === id
     )[0];
     this.openClientModal(true);
-    this.clientInitForm = { ...this.selectedClient };
+    this.clientFormObj = { ...this.selectedClient };
   }
 
   openProductModal(isEdit?: boolean) {
@@ -108,9 +128,44 @@ export class AdminComponent implements OnInit {
     this.displayModalProduct = true;
   }
 
+  closeProductModal() {
+    this.displayModalProduct = false;
+    this.image = undefined;
+    this.selectedProduct = undefined;
+    this.isEdit = false;
+    this.productFormObj = this.getProductInitForm();
+  }
+
   openClientModal(isEdit?: boolean) {
     this.isEdit = isEdit || false;
     this.displayModalClient = true;
+  }
+
+  closeClientModal() {
+    this.displayModalClient = false;
+    this.selectedClient = undefined;
+    this.isEdit = false;
+    this.clientFormObj = this.getClientInitForm();
+  }
+
+  imageUpload() {
+    if (!this.image) return;
+
+    const uploadFileSource = this.photoService
+      .getPresignedUrls(this.image)
+      .pipe(
+        filter((resp: any) => resp.status === 'ok'),
+        concatMap((resp: any) => {
+          const fileUploadUrl = resp.response;
+          console.log(resp);
+          return this.photoService.uploadfileAWSS3(
+            fileUploadUrl,
+            this.image.type,
+            this.image
+          );
+        })
+      );
+    return uploadFileSource;
   }
 
   createProduct() {
@@ -119,16 +174,119 @@ export class AdminComponent implements OnInit {
       setTimeout(() => (this.showError = false), 2500);
       return;
     }
-    const { image_url, ...restForm } = this.productForm.value;
-    console.log('image', image_url);
-    // this.productService.createProduct(restForm).subscribe((resp) => {
-    //   console.log(resp);
-    //   alert('Has creado un nuevo producto');
-    // });
+    const messageSuccess = 'Has creado un nuevo producto: ';
+    const form = this.productForm.value;
+    try {
+      const image_source = this.imageUpload();
+      if (image_source) {
+        image_source
+          .pipe(
+            filter((resp: any) => resp.status === 200),
+            concatMap((resp: any) => {
+              const image_url = resp.url.split('?')[0];
+              const body = {
+                ...form,
+                image_url,
+              };
+              return this.productService.createProduct(body);
+            }),
+            catchError((err) => {
+              console.log('No se pudo crear el producto');
+              //Return the chocolatize fruit
+              return of('Producto no creado');
+            })
+          )
+          .subscribe((resp: any) => {
+            alert(messageSuccess + resp.name);
+            this.closeProductModal();
+            this.loadProducts();
+          });
+      } else {
+        this.productService.createProduct(form).subscribe((resp: any) => {
+          alert(messageSuccess + resp.name);
+          this.closeProductModal();
+          this.loadProducts();
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      alert('Problema al subir la imagen');
+    }
+  }
+
+  updateProduct() {
+    const id = this.selectedProduct?.product_id;
+    const prevImage = this.selectedProduct?.image_url;
+    if (!id) return;
+    const attrs = this.productForm.value;
+    attrs.price = Number(attrs.price);
+    const messageSuccess = 'Se ha actualizado el producto';
+    try {
+      const image_source = this.imageUpload();
+      if (image_source) {
+        image_source
+          .pipe(
+            filter((resp: any) => resp.status === 200),
+            concatMap((resp: any) => {
+              const image_url = resp.url.split('?')[0];
+              const body = {
+                ...attrs,
+                image_url,
+              };
+              return this.productService.updateProduct(id, body);
+            }),
+            tap((resp: any) => {
+              const imageName = prevImage
+                ? prevImage.split('/products/')[1]
+                : '';
+              if (imageName) {
+                this.photoService.deleteFileAWSS3(imageName).subscribe();
+              }
+            })
+          )
+          .subscribe((resp: any) => {
+            alert(messageSuccess + resp.name);
+            this.closeProductModal();
+            this.loadProducts();
+          });
+      } else {
+        this.productService.updateProduct(id, attrs).subscribe((resp) => {
+          console.log(resp);
+          this.closeProductModal();
+          this.productForm.reset();
+          this.loadProducts();
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      alert('Problema al actualizar el producto');
+    }
+  }
+
+  deleteProduct(id: string) {
+    if (confirm('En serio quieres eliminar este producto?')) {
+      this.productService
+        .deleteProduct(id)
+        .pipe(
+          concatMap(() => {
+            const product = this.getById<Product>(id, 'Product');
+            const imageName = product.image_url
+              ? product.image_url.split('/products/')[1]
+              : '';
+            return this.photoService.deleteFileAWSS3(imageName);
+          })
+        )
+        .subscribe((res: any) => {
+          alert('Producto eliminado!');
+          this.loadProducts();
+        });
+    }
   }
 
   changeImage(target: any) {
-    console.log(target.files);
+    if (!target.files) return;
+    const file = (target.files as FileList)[0];
+    this.image = file;
   }
 
   createClient() {
@@ -141,7 +299,8 @@ export class AdminComponent implements OnInit {
     this.clientsService
       .createClient(this.clientForm.value)
       .subscribe((resp) => {
-        console.log(resp);
+        this.loadClients();
+        this.closeClientModal();
         alert('Has creado un nuevo cliente');
       });
   }
@@ -150,23 +309,32 @@ export class AdminComponent implements OnInit {
     const id = this.selectedClient?.client_id!;
     const attrs = this.clientForm.value;
     this.clientsService.updateClient(id, attrs).subscribe((resp) => {
-      this.selectedClient = undefined;
-      this.displayModalClient = false;
-      this.isEdit = false;
+      this.closeClientModal();
       this.clientForm.reset();
       this.loadClients();
     });
   }
 
+  deleteClient(id: string) {
+    if (confirm('En serio quieres eliminar este cliente?')) {
+      this.clientsService.deleteClient(id).subscribe((res: any) => {
+        alert('Client eliminado!');
+        this.loadClients();
+      });
+    }
+  }
+
   loadProducts() {
     this.productService.getProducts().subscribe((resp: any) => {
       this.products = resp.products;
+      this.showSpinnerProduct = false;
     });
   }
 
   loadClients() {
     this.clientsService.getClients().subscribe((resp: any) => {
       this.clients = resp.clients;
+      this.showSpinnerClient = false;
     });
   }
 
