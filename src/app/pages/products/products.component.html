@@ -7,7 +7,10 @@
         <div class="product-item">
             <div class="product-item-content">
                 <div class="mb-3">
-                    <img src="assets/images/{{product.image}}" [alt]="product.title" class="product-image" />
+                    <img *ngIf="!product.image_url" src="/assets/images/default_product.jpg" alt="image by default"
+                        class="product-image" />
+                    <img *ngIf="product.image_url" [src]="product.image_url" [alt]="product.name"
+                        class="product-image" />
                 </div>
                 <div>
                     <h4 class="mb-1">{{product.name}}</h4>

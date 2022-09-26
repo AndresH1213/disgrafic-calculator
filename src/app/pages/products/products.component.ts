@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PhotoService } from 'src/app/services/photo.service';
+import { Product } from '../../interfaces/Product';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-products',
@@ -7,9 +8,9 @@ import { PhotoService } from 'src/app/services/photo.service';
   styleUrls: ['./products.component.css'],
 })
 export class ProductsComponent implements OnInit {
-  products: any[] = [];
+  products: Product[] = [];
   responsiveOptions: any[] = [];
-  constructor(private photoService: PhotoService) {
+  constructor(private productsService: ProductsService) {
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
@@ -30,6 +31,8 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.products = this.photoService.getProducts();
+    this.productsService.getProducts().subscribe((resp: any) => {
+      this.products = resp.products;
+    });
   }
 }
