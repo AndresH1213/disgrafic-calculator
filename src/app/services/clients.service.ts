@@ -34,4 +34,9 @@ export class ClientsService {
     const url = `${this.baseUrl}/client/` + id;
     return this.http.put(url, attrs);
   }
+
+  deleteClient(id: string) {
+    const url = `${this.baseUrl}/client/` + id;
+    return this.http.delete(url);
+  }
 }
