@@ -37,8 +37,12 @@ export class AdminComponent implements OnInit {
   public selectedClient?: Client;
 
   productFormObj: Product;
-
   clientFormObj: Client;
+
+  public labelOptions = [
+    { label: 'Mercancia', value: 'mercancia' },
+    { label: 'Material', value: 'material' },
+  ];
 
   constructor(
     private productService: ProductsService,
@@ -54,9 +58,9 @@ export class AdminComponent implements OnInit {
   getProductInitForm(): Product {
     return {
       name: '',
-      label: '',
+      label: 'material',
       price: 0,
-      product_type: '',
+      product_type: 'Maquina',
       subtype: '',
       image_url: '',
     };
@@ -325,7 +329,7 @@ export class AdminComponent implements OnInit {
   }
 
   loadProducts() {
-    this.productService.getProducts().subscribe((resp: any) => {
+    this.productService.getProducts('mercancia').subscribe((resp: any) => {
       this.products = resp.products;
       this.showSpinnerProduct = false;
     });
