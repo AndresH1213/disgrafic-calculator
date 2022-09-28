@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormObject } from 'src/app/models/Form';
 import Swal from 'sweetalert2';
 import { CalcService } from '../../services/calc.service';
 import { AuthService } from '../../services/auth.service';
+import { ProductsService } from '../../services/products.service';
+import { Product } from '../../interfaces/Product';
+import { MaterialStructured, Size } from '../../interfaces/Calculator';
+import { FormObject } from 'src/app/interfaces/Forms';
+import { Client } from 'src/app/interfaces/Client';
+import { ClientsService } from 'src/app/services/clients.service';
 
 interface InputEvent {
   originalEvent: PointerEvent;
@@ -19,66 +24,77 @@ export class CalculatorComponent implements OnInit {
   isResmilla = false;
   showWork = false;
 
-  pliegosCant: number | undefined;
-  planchasSelected: string | undefined;
-  planchasCant: number | undefined;
-  papelSelected: string | undefined;
-  papelTamano: number | undefined;
+  pliegosCant?: number;
+  planchasSelected?: string;
+  planchasCant?: number;
+  papelSelected?: string;
+  papelTamano?: number;
   papelTamanosCant: number = 0;
-  maquinaSelected: string | undefined;
-  maquinaCant: number | undefined;
+  maquinaSelected?: string;
+  maquinaCant?: number;
 
-  sizes: any[] = [];
+  sizes: Size[] = [];
 
-  papersType: any = [];
-  papersStructured: any = [];
-  planchasType: any = [];
-  planchasStructured: any = [];
-  machineType: any = [];
-  machineStructured: any = [];
+  pappersType: Product[] = [];
+  pappersStructured: MaterialStructured[] = [];
+  planchasType: Product[] = [];
+  planchasStructured: MaterialStructured[] = [];
+  machineType: Product[] = [];
+  machineStructured: MaterialStructured[] = [];
+
+  clients: Client[] = [];
+  selectedClient = '';
 
   constructor(
     private calcService: CalcService,
+    private clientsService: ClientsService,
+    private productsService: ProductsService,
     private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.retrieveMaterials();
     this.sizes = this.calcService.getSizes();
+    this.loadClients();
   }
-
-  retrieveMaterials() {
-    this.calcService.getMaterials().subscribe((resp: any) => {
-      if (resp.ok) {
-        const { results } = resp;
-        for (let item of results.Items) {
-          if (item.type === 'papel') {
-            this.papersType.push(item);
-          } else if (item.type === 'plancha') {
-            this.planchasType.push(item);
-          } else {
-            this.machineType.push(item);
-          }
-        }
-        this.structureToCascadeSelect(this.papersType, this.papersStructured);
-        this.structureToCascadeSelect(this.machineType, this.machineStructured);
-        this.structureToCascadeSelect(
-          this.planchasType,
-          this.planchasStructured
-        );
-      }
+  loadClients() {
+    this.clientsService.getClients().subscribe((resp: any) => {
+      const { clients } = resp;
+      this.clients = clients;
     });
   }
 
-  structureToCascadeSelect(collection: any, arrayStrutured: any) {
+  // [{productId: v4(), type, subtype, name, label, price}]
+  retrieveMaterials() {
+    this.productsService.getProducts('material').subscribe((resp: any) => {
+      const { products } = resp as { products: Product[] };
+      for (let item of products) {
+        if (item.product_type === 'Papel') {
+          this.pappersType.push(item);
+        } else if (item.product_type === 'Plancha') {
+          this.planchasType.push(item);
+        } else {
+          this.machineType.push(item);
+        }
+      }
+      this.structureToCascadeSelect(this.pappersType, this.pappersStructured);
+      this.structureToCascadeSelect(this.machineType, this.machineStructured);
+      this.structureToCascadeSelect(this.planchasType, this.planchasStructured);
+    });
+  }
+
+  structureToCascadeSelect(
+    collection: Product[],
+    arrayStrutured: MaterialStructured[]
+  ) {
     let subtypesArr = collection
-      .map((object: any) => object.subtype)
-      .filter((value: string, index: number, self: any) => {
+      .map((object) => object.subtype.trim())
+      .filter((value: string, index: number, self: string[]) => {
         return self.indexOf(value) === index;
       });
 
     for (let subtype of subtypesArr) {
-      let objectStructured = {
+      let objectStructured: MaterialStructured = {
         subtype,
         materials: [],
       };
@@ -86,16 +102,17 @@ export class CalculatorComponent implements OnInit {
         objectStructured.subtype = 'varios';
       }
       objectStructured.materials = collection
-        .filter((object: any) => object.subtype === subtype)
+        .filter((object: any) => object.subtype.trim() === subtype)
         .map((object: any) => {
           return {
-            prodId: object.productId,
+            product_id: object.product_id,
             label: object.label,
             name: object.name,
           };
         });
       arrayStrutured.push(objectStructured);
     }
+    console.log(arrayStrutured);
   }
 
   showResponsiveDialog() {
@@ -104,26 +121,28 @@ export class CalculatorComponent implements OnInit {
 
   calculate() {
     if (!this.checkValues()) {
+      console.log('invalue');
       return;
     }
+
     let formObject: FormObject = {
       plates: {
-        prodId: this.planchasSelected!,
-        cant: this.planchasCant!,
+        id: this.planchasSelected!,
+        quantity: this.planchasCant!,
       },
       papper: {
-        prodId: this.papelSelected!,
-        cant: this.pliegosCant!,
-      },
-      sizes: {
-        size: this.papelTamano!,
-        cant: this.pliegosCant!,
+        id: this.papelSelected!,
+        size: this.papelTamano!.toString(),
+        quantity: this.pliegosCant!,
       },
       machine: {
-        prodId: this.maquinaSelected!,
-        cant: this.maquinaCant!,
+        id: this.maquinaSelected!,
+        quantity: this.maquinaCant!,
       },
+      handwork: 0,
+      gain_percentage: 0,
     };
+    console.log(formObject);
     this.calcService.calculate(formObject).subscribe((resp: any) => {
       if (resp.ok) {
         let currency = Intl.NumberFormat('en-US');
@@ -157,7 +176,7 @@ export class CalculatorComponent implements OnInit {
   }
 
   papelType(event: InputEvent) {
-    let papelObj = this.papersType.find(
+    let papelObj = this.pappersType.find(
       (papper: any) => papper.productId === event.value
     );
     this.isResmilla = false;
