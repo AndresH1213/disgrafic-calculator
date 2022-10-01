@@ -1,13 +1,12 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CalcService } from '../../../services/calc.service';
-import { ClientsService } from '../../../services/clients.service';
 
-interface field {
+interface Field {
   name: string;
   price: number;
 }
 
-interface percentage {
+interface Percentage {
   name: string;
   value: string;
 }
@@ -18,16 +17,13 @@ interface percentage {
   styleUrls: ['./form-work-labor.component.css'],
 })
 export class FormWorkLaborComponent implements OnInit {
-  @Output() formHandWork: EventEmitter<number> = new EventEmitter();
+  @Output() valueHandWork: EventEmitter<number> = new EventEmitter();
   @Output() percentage: EventEmitter<string> = new EventEmitter();
 
-  public percentages: percentage[] = [];
+  public percentages: Percentage[] = [];
   private labelFields: string[] = [];
-  formFields: field[] = [];
+  formFields: Field[] = [];
 
-  value6: number | undefined;
-
-  PorcetajeGanacia: number | undefined;
   constructor(private calcService: CalcService) {
     this.loadLabelField();
     this.formFields = this.loadFormFields();
@@ -51,7 +47,15 @@ export class FormWorkLaborComponent implements OnInit {
       .map((_, i) => ({ name: this.labelFields[i], price: 0 }));
   }
 
-  calculate() {
-    // console.log(this.formFields);
+  setPercentage(event: any) {
+    this.percentage.emit(event.value);
+  }
+
+  workLaborCalculate(_: any) {
+    let total = 0;
+    this.formFields.forEach((field) => {
+      total += field.price;
+    });
+    this.valueHandWork.emit(total);
   }
 }
