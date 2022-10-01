@@ -9,13 +9,14 @@
                         buttonLayout="horizontal" [step]="1000" [inputStyle]="{'width': '7rem'}" [min]="0"
                         decrementButtonClass="p-button-info" name="{{formFields[i].name}"
                         incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus" placeholder="price"
-                        [minFractionDigits]="0" decrementButtonIcon="pi pi-minus">
+                        [minFractionDigits]="0" decrementButtonIcon="pi pi-minus"
+                        (ngModelChange)="workLaborCalculate($event)">
                     </p-inputNumber>
                 </div>
                 <div class="control-percentage workforce-field" *ngIf="i+1 === formFields.length">
                     <div class="p-inputgroup">
                         <p-dropdown [options]="percentages" name="percentages" optionLabel="name" optionValue="value"
-                            placeholder="Percentage" [style]="{'minWidth': '11rem'}" [(ngModel)]="percentage">
+                            placeholder="Percentage" (onChange)="setPercentage($event)" [style]="{'minWidth': '11rem'}">
                         </p-dropdown>
                     </div>
                 </div>
