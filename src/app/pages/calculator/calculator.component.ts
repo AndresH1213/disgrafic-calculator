@@ -45,6 +45,9 @@ export class CalculatorComponent implements OnInit {
   clients: Client[] = [];
   selectedClient = '';
 
+  percentage: string = '0';
+  handWork: number = 0;
+
   constructor(
     private calcService: CalcService,
     private clientsService: ClientsService,
@@ -112,18 +115,16 @@ export class CalculatorComponent implements OnInit {
         });
       arrayStrutured.push(objectStructured);
     }
-    console.log(arrayStrutured);
   }
 
   showResponsiveDialog() {
     this.showModal = !this.showModal;
   }
 
+  getHandworkValue() {}
+
   calculate() {
-    if (!this.checkValues()) {
-      console.log('invalue');
-      return;
-    }
+    if (!this.checkValues()) return;
 
     let formObject: FormObject = {
       plates: {
@@ -139,14 +140,12 @@ export class CalculatorComponent implements OnInit {
         id: this.maquinaSelected!,
         quantity: this.maquinaCant!,
       },
-      handwork: 0,
-      gain_percentage: 0,
+      handwork: this.handWork,
+      gain_percentage: parseFloat(this.percentage),
     };
-    console.log(formObject);
     this.calcService.calculate(formObject).subscribe((resp: any) => {
-      if (resp.ok) {
-        let currency = Intl.NumberFormat('en-US');
-        let result = `<strong>$${currency.format(resp.result)} COP</strong>`;
+      if (resp.total) {
+        let result = `<strong>$${resp.total} COP</strong>`;
         Swal.fire(
           'Calculado',
           `El trabajo tiene un valor aproximado de ${result}, el valor puede variar dependiendo de la mano de obra que necesite tu trabajo, para mayor informacion comunicate`,
@@ -198,42 +197,10 @@ export class CalculatorComponent implements OnInit {
   }
 
   showWorkForm(event: MouseEvent) {
-    if (!this.authService.token) {
-      Swal.fire({
-        title: 'Requieres autorización ¿tienes alguna clave para seguir?',
-        input: 'text',
-        inputAttributes: {
-          autocapitalize: 'off',
-        },
-        showCancelButton: true,
-        confirmButtonText: 'Enviar',
-        showLoaderOnConfirm: true,
-        preConfirm: (token) => {
-          // this.authService.validateToken(token).toPromise();
-          return { confirm: true, user: 'andres' };
-        },
-        allowOutsideClick: () => !Swal.isLoading(),
-      }).then((result: any) => {
-        console.log(result);
-        if (result.value?.confirm) {
-          Swal.fire({
-            title: `Hola ${result.value.user}`,
-          });
-
-          this.showWork = true;
-        } else if (result.isConfirmed) {
-          Swal.fire(
-            'Está bien el código?',
-            'No pudimos confirmar el token ingresado',
-            'info'
-          );
-          this.showWork = false;
-        } else {
-          this.showWork = false;
-        }
-      });
+    if (this.authService.token) {
+      return;
     }
-    this.showWork = false;
+    this.showWork = !this.showWork;
   }
 
   checkValues(): boolean {

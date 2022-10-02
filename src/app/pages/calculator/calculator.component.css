@@ -102,3 +102,9 @@ input[type="number"] {
     text-align: center;
   }
 }
+
+.calculator_options {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
