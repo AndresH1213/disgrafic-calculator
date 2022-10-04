@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Product } from '../../interfaces/Product';
-import { Client, listClients } from '../../interfaces/Client';
+import { Product, ProductOptions } from '../../interfaces/Product';
+import { Client } from '../../interfaces/Client';
 import { ClientsService } from '../../services/clients.service';
 import { NgForm } from '@angular/forms';
 import { ProductsService } from '../../services/products.service';
 import { PhotoService } from '../../services/photo.service';
 import { concatMap, filter, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin',
@@ -43,6 +44,12 @@ export class AdminComponent implements OnInit {
     { label: 'Mercancia', value: 'mercancia' },
     { label: 'Material', value: 'material' },
   ];
+  public productOptions = [
+    { name: 'Productos', value: ProductOptions.Merch },
+    { name: 'Materiales', value: ProductOptions.Material },
+  ];
+
+  public productOptionSelected = ProductOptions.Merch;
 
   constructor(
     private productService: ProductsService,
@@ -60,7 +67,7 @@ export class AdminComponent implements OnInit {
       name: '',
       label: 'material',
       price: 0,
-      product_type: 'Maquina',
+      product_type: '',
       subtype: '',
       image_url: '',
     };
@@ -88,7 +95,7 @@ export class AdminComponent implements OnInit {
 
     if (this.products.length === 0) {
       this.showSpinnerProduct = true;
-      this.loadProducts();
+      this.loadProducts(ProductOptions.Merch);
     }
   }
 
@@ -161,7 +168,7 @@ export class AdminComponent implements OnInit {
         filter((resp: any) => resp.status === 'ok'),
         concatMap((resp: any) => {
           const fileUploadUrl = resp.response;
-          console.log(resp);
+
           return this.photoService.uploadfileAWSS3(
             fileUploadUrl,
             this.image.type,
@@ -196,25 +203,24 @@ export class AdminComponent implements OnInit {
             }),
             catchError((err) => {
               console.log('No se pudo crear el producto');
-              //Return the chocolatize fruit
               return of('Producto no creado');
             })
           )
           .subscribe((resp: any) => {
-            alert(messageSuccess + resp.name);
+            Swal.fire('', messageSuccess + resp.name, 'success');
             this.closeProductModal();
             this.loadProducts();
           });
       } else {
         this.productService.createProduct(form).subscribe((resp: any) => {
-          alert(messageSuccess + resp.name);
+          Swal.fire('', messageSuccess + resp.name, 'success');
           this.closeProductModal();
           this.loadProducts();
         });
       }
     } catch (error) {
       console.log(error);
-      alert('Problema al subir la imagen');
+      Swal.fire('Ocurrio un problema', 'Problema al subir la imagen', 'error');
     }
   }
 
@@ -249,21 +255,25 @@ export class AdminComponent implements OnInit {
             })
           )
           .subscribe((resp: any) => {
-            alert(messageSuccess + resp.name);
+            Swal.fire('', messageSuccess + resp.name, 'success');
             this.closeProductModal();
             this.loadProducts();
           });
       } else {
-        this.productService.updateProduct(id, attrs).subscribe((resp) => {
-          console.log(resp);
+        this.productService.updateProduct(id, attrs).subscribe((resp: any) => {
           this.closeProductModal();
           this.productForm.reset();
+          Swal.fire('', messageSuccess + resp.name, 'success');
           this.loadProducts();
         });
       }
     } catch (error) {
       console.log(error);
-      alert('Problema al actualizar el producto');
+      Swal.fire(
+        'Ocurrio un problema',
+        'Problema al actualizar el producto',
+        'error'
+      );
     }
   }
 
@@ -281,7 +291,7 @@ export class AdminComponent implements OnInit {
           })
         )
         .subscribe((res: any) => {
-          alert('Producto eliminado!');
+          Swal.fire('', 'Producto eliminado!', 'success');
           this.loadProducts();
         });
     }
@@ -305,7 +315,7 @@ export class AdminComponent implements OnInit {
       .subscribe((resp) => {
         this.loadClients();
         this.closeClientModal();
-        alert('Has creado un nuevo cliente');
+        Swal.fire('', 'Has creado un nuevo cliente', 'success');
       });
   }
 
@@ -319,19 +329,26 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  setProductOption(event: any) {
+    const selectedOption = event.value.value;
+    this.loadProducts(selectedOption);
+    this.productOptionSelected = selectedOption;
+  }
+
   deleteClient(id: string) {
     if (confirm('En serio quieres eliminar este cliente?')) {
       this.clientsService.deleteClient(id).subscribe((res: any) => {
-        alert('Client eliminado!');
+        Swal.fire('', 'Client eliminado!', 'success');
         this.loadClients();
       });
     }
   }
 
-  loadProducts() {
-    this.productService.getProducts('mercancia').subscribe((resp: any) => {
+  loadProducts(queryParam: ProductOptions = this.productOptionSelected) {
+    this.productService.getProducts(queryParam).subscribe((resp: any) => {
       this.products = resp.products;
       this.showSpinnerProduct = false;
+      this.productOptionSelected = queryParam;
     });
   }
 

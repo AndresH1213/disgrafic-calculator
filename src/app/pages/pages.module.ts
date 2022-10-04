@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { CalculatorComponent } from './calculator/calculator.component';
-import { UsersComponent } from './users/users.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { ProductsComponent } from './products/products.component';
@@ -22,7 +21,6 @@ import { AdminComponent } from './admin/admin.component';
   declarations: [
     PagesComponent,
     CalculatorComponent,
-    UsersComponent,
     HomeComponent,
     AuthComponent,
     AdminComponent,
