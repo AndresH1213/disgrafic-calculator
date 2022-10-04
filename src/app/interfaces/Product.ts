@@ -7,3 +7,8 @@ export interface Product {
   label: string;
   image_url?: string;
 }
+
+export enum ProductOptions {
+  Material = 'material',
+  Merch = 'mercancia',
+}
