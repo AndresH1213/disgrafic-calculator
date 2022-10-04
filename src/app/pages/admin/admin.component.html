@@ -21,7 +21,9 @@
     <ng-template pTemplate="caption">
       <div class="jt-cont-between">
         <p-button icon="pi pi-backward" (click)="showOptions()"></p-button>
-        Productos
+        <p-dropdown [options]="productOptions" name="product-options" optionLabel="name"
+          [style]="{'minWidth': '8rem', 'text-align': 'center'}" (onChange)="setProductOption($event)">
+        </p-dropdown>
         <p-button (click)="openProductModal()">Agregar<span class="pi pi-plus icons"></span></p-button>
         <p-button icon="pi pi-refresh" (click)="loadProducts()"></p-button>
       </div>
@@ -29,7 +31,7 @@
     <ng-template pTemplate="header">
       <tr>
         <th>Nombre</th>
-        <th>Imagen</th>
+        <th *ngIf="productOptionSelected === productOptions[0].value">Imagen</th>
         <th>Tipo</th>
         <th>Subtipo</th>
         <th>Precio</th>
@@ -39,7 +41,7 @@
     <ng-template pTemplate="body" let-product>
       <tr>
         <td>{{product.name}}</td>
-        <td>
+        <td *ngIf="productOptionSelected === productOptions[0].value">
           <img *ngIf="product.image_url" [src]="product.image_url" [alt]="product.name" width="100" class="shadow-4" />
           <img *ngIf="!product.image_url" src="/assets/images/default_product.jpg" alt="default_image" width="100"
             class="shadow-4" />
@@ -73,7 +75,9 @@
     <ng-template pTemplate="caption">
       <div class="jt-cont-between">
         <p-button icon="pi pi-backward" (click)="showOptions()"></p-button>
-        Clientes
+        <h4>
+          Clientes
+        </h4>
         <p-button (click)="openClientModal()">Agregar<span class="pi pi-plus icons"></span></p-button>
         <p-button icon="pi pi-refresh" (click)="loadClients()"></p-button>
       </div>
