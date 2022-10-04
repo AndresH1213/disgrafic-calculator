@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://ob2hc5sxp6.execute-api.us-east-2.amazonaws.com',
+  baseUrl: 'https://kbdd0iag5h.execute-api.us-east-2.amazonaws.com',
 };
 
 /*

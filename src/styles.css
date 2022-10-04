@@ -44,6 +44,21 @@ a {
   color: var(--secondary-color-light);
 }
 
+::-webkit-scrollbar {
+  width: 1em;
+  height: 0.5em;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--black-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.582);
+  border: 0.2em solid var(--black-color);
+  border-radius: 100vw;
+}
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
