@@ -5,19 +5,24 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { getBaseUrl } from './utils';
+import { getBaseUrl, getHeaders } from './utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PhotoService {
   baseUrl: string;
+  headers: any;
   constructor(private http: HttpClient) {
     this.baseUrl = getBaseUrl();
+    this.headers = getHeaders();
   }
 
   getPresignedUrls(image: any) {
-    const headers = new HttpHeaders().set('Accept', 'application/json');
+    const authHeaders = this.headers.headers.Authorization;
+    const headers = new HttpHeaders()
+      .set('Accept', 'application/json')
+      .set('Authorization', authHeaders);
     const params = new HttpParams()
       .set('name', image.name)
       .set('mime', image.type);
@@ -38,6 +43,6 @@ export class PhotoService {
 
   deleteFileAWSS3(name: string) {
     const url = `${this.baseUrl}/image/` + name;
-    return this.http.delete(url);
+    return this.http.delete(url, this.headers);
   }
 }
