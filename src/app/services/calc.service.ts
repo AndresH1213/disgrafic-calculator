@@ -17,8 +17,7 @@ export class CalcService {
 
   calculate(form: FormObject) {
     const url = `${this.baseUrl}/calculate`;
-    let object = { form };
-    return this.http.post(url, object, this.headers);
+    return this.http.post(url, form, this.headers);
   }
 
   getSizes() {
