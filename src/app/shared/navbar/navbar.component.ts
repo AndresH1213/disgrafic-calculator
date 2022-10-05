@@ -11,18 +11,22 @@ export class NavbarComponent implements OnInit {
   items: MenuItem[] = [];
   isAuth: boolean = false;
   constructor(private auth: AuthService) {
-    this.isAuth = !!this.auth.token;
+    this.isAuth = Boolean(this.auth.token);
   }
 
   ngOnInit(): void {
     this.items = [
       { label: 'Inicio', icon: 'pi pi-home', routerLink: '/' },
-      { label: 'Productos', icon: 'pi pi-products', routerLink: '/products' },
-      { label: 'Imprenta', icon: 'pi pi-plus', routerLink: '/imprent' },
-      { label: 'Nosotros', icon: 'pi pi-download', routerLink: '/about' },
+      { label: 'Productos', icon: 'pi pi-th-large', routerLink: '/products' },
+      { label: 'Imprenta', icon: 'pi pi-wallet', routerLink: '/imprent' },
+      { label: 'Nosotros', icon: 'pi pi-star', routerLink: '/about' },
       this.isAuth
-        ? { label: 'Usuarios', icon: 'pi pi-refresh', routerLink: '/users' }
+        ? { label: 'Admin', icon: 'pi pi-user-edit', routerLink: '/admin' }
         : {},
     ];
+  }
+
+  logOut() {
+    this.auth.logOut();
   }
 }
