@@ -11,7 +11,7 @@ export class ClientsService {
   baseUrl: string;
 
   constructor(private http: HttpClient) {
-    // this.headers = getHeaders();
+    this.headers = getHeaders();
     this.baseUrl = getBaseUrl();
   }
 
@@ -27,16 +27,16 @@ export class ClientsService {
 
   createClient(client: Client) {
     const url = `${this.baseUrl}/client`;
-    return this.http.post(url, { ...client });
+    return this.http.post(url, { ...client }, this.headers);
   }
 
   updateClient(id: string, attrs: any) {
     const url = `${this.baseUrl}/client/` + id;
-    return this.http.put(url, attrs);
+    return this.http.put(url, attrs, this.headers);
   }
 
   deleteClient(id: string) {
     const url = `${this.baseUrl}/client/` + id;
-    return this.http.delete(url);
+    return this.http.delete(url, this.headers);
   }
 }
