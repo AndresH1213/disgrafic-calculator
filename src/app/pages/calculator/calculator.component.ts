@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import { CalcService } from '../../services/calc.service';
 import { AuthService } from '../../services/auth.service';
 import { ProductsService } from '../../services/products.service';
-import { Product } from '../../interfaces/Product';
+import { Product, ProductOptions } from '../../interfaces/Product';
 import { MaterialStructured, Size } from '../../interfaces/Calculator';
 import { FormObject } from 'src/app/interfaces/Forms';
 import { Client } from 'src/app/interfaces/Client';
@@ -42,6 +42,7 @@ export class CalculatorComponent implements OnInit {
   machineType: Product[] = [];
   machineStructured: MaterialStructured[] = [];
 
+  isAuth: boolean = false;
   clients: Client[] = [];
   selectedClient = '';
 
@@ -58,7 +59,12 @@ export class CalculatorComponent implements OnInit {
   ngOnInit(): void {
     this.retrieveMaterials();
     this.sizes = this.calcService.getSizes();
-    this.loadClients();
+    this.authService.validateToken().subscribe((valid: boolean) => {
+      if (valid) {
+        this.loadClients();
+        this.isAuth = valid;
+      }
+    });
   }
   loadClients() {
     this.clientsService.getClients().subscribe((resp: any) => {
@@ -69,21 +75,26 @@ export class CalculatorComponent implements OnInit {
 
   // [{productId: v4(), type, subtype, name, label, price}]
   retrieveMaterials() {
-    this.productsService.getProducts('material').subscribe((resp: any) => {
-      const { products } = resp as { products: Product[] };
-      for (let item of products) {
-        if (item.product_type === 'Papel') {
-          this.pappersType.push(item);
-        } else if (item.product_type === 'Plancha') {
-          this.planchasType.push(item);
-        } else {
-          this.machineType.push(item);
+    this.productsService
+      .getProducts(ProductOptions.Material)
+      .subscribe((resp: any) => {
+        const { products } = resp as { products: Product[] };
+        for (let item of products) {
+          if (item.product_type === 'Papel') {
+            this.pappersType.push(item);
+          } else if (item.product_type === 'Plancha') {
+            this.planchasType.push(item);
+          } else {
+            this.machineType.push(item);
+          }
         }
-      }
-      this.structureToCascadeSelect(this.pappersType, this.pappersStructured);
-      this.structureToCascadeSelect(this.machineType, this.machineStructured);
-      this.structureToCascadeSelect(this.planchasType, this.planchasStructured);
-    });
+        this.structureToCascadeSelect(this.pappersType, this.pappersStructured);
+        this.structureToCascadeSelect(this.machineType, this.machineStructured);
+        this.structureToCascadeSelect(
+          this.planchasType,
+          this.planchasStructured
+        );
+      });
   }
 
   structureToCascadeSelect(
