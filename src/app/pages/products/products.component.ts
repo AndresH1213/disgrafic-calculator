@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../interfaces/Product';
+import { Product, ProductOptions } from '../../interfaces/Product';
 import { ProductsService } from '../../services/products.service';
 
 @Component({
@@ -31,8 +31,10 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.productsService.getProducts('mercancia').subscribe((resp: any) => {
-      this.products = resp.products;
-    });
+    this.productsService
+      .getProducts(ProductOptions.Merch)
+      .subscribe((resp: any) => {
+        this.products = resp.products;
+      });
   }
 }
