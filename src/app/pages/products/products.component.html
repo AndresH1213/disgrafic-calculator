@@ -1,4 +1,4 @@
-<p-carousel [value]="products" [numVisible]="3" [numScroll]="3" [circular]="true"
+<p-carousel *ngIf="products.length > 0" [value]="products" [numVisible]="3" [numScroll]="3" [circular]="true"
     [responsiveOptions]="responsiveOptions" styleClass="animate__animated animate__fadeIn">
     <ng-template pTemplate="header">
         <h1><span class="underline">Productos disponibles </span></h1>
@@ -20,3 +20,9 @@
         </div>
     </ng-template>
 </p-carousel>
+
+<div class="spinner-products__container">
+    <p-progressSpinner *ngIf="products.length === 0" [style]="{width: '80px', height: '80px'}"
+        styleClass="custom-spinner" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s">
+    </p-progressSpinner>
+</div>
