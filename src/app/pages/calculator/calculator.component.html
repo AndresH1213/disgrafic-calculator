@@ -54,14 +54,14 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="!showWork">
+            <div *ngIf="showWork">
                 <app-form-work-labor (percentage)="percentage = $event" (valueHandWork)="handWork = $event">
                 </app-form-work-labor>
             </div>
         </div>
         <div class="mt-5 ms-2 mb-2 container calculator_options">
 
-            <div *ngIf="false">
+            <div *ngIf="isAuth">
                 <p-dropdown [options]="clients" name="clients" optionLabel="name" placeholder="Seleccione un cliente"
                     [style]="{'minWidth': '11rem'}" [(ngModel)]="selectedClient">
                 </p-dropdown>
