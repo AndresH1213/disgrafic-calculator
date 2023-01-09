@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 export class AuthComponent implements OnInit {
   private errorMessage: string = '';
 
-  public name: string = '';
+  public username: string = '';
   public password: string = '';
 
   constructor(private router: Router, private authService: AuthService) {}
@@ -19,7 +19,7 @@ export class AuthComponent implements OnInit {
   ngOnInit(): void {}
 
   validateUserInput() {
-    if (this.name.length < 4) {
+    if (this.username.length < 4) {
       this.errorMessage = 'El usuario tiene muy pocas carácteres';
       return false;
     }
@@ -32,7 +32,7 @@ export class AuthComponent implements OnInit {
 
   logIn() {
     const authForm = {
-      username: this.name,
+      user: this.username,
       password: this.password,
     };
 
@@ -44,6 +44,7 @@ export class AuthComponent implements OnInit {
 
     this.authService.loginUser(authForm).subscribe(
       (resp) => {
+        console.log(resp);
         if (resp.token) {
           this.router.navigateByUrl('/admin');
         }
