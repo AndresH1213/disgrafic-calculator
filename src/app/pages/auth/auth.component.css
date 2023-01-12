@@ -97,3 +97,13 @@ input {
 *:focus {
   outline: none;
 }
+
+@media only screen and (max-width: 450px) {
+  .auth-card {
+    width: 300px;
+  }
+
+  input {
+    width: 180px;
+  }
+}
