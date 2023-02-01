@@ -1,9 +1,17 @@
+.home-content-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 2fr;
+  place-items: center;
+}
+
 .home-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-content: center;
   place-items: center;
   background-color: transparent;
+  max-width: 2000px;
 }
 
 p-button {
@@ -27,8 +35,45 @@ p-button {
 
 .image-home {
   width: 45vw;
+  max-width: 700px;
   height: 40vh;
   transform: translateX(-20px);
+}
+
+.row {
+  display: flex;
+  margin: auto;
+}
+
+.col {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.img-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.col img {
+  height: 70%;
+  width: 100%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.left .img-container {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.right .img-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .waves {
@@ -58,25 +103,29 @@ p-button {
   .home-content {
     grid-template-columns: 2fr;
   }
+
   .image-home {
     margin-top: 20px;
-    width:  60vw;
+    width: 60vw;
     border-radius: 2em;
   }
+
   .landing-description {
     padding: 10px 15px;
   }
 }
 
 @media only screen and (max-width: 510px) {
-  .home-content{
+  .home-content {
     padding: 0px;
     grid-template-rows: 2fr 1fr;
   }
+
   .image-home {
     width: 100%;
     object-fit: cover;
   }
+
   .landing-title {
     padding-top: 10px;
   }
