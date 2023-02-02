@@ -1,8 +1,11 @@
 .home-content-container {
+  margin-top: 5rem;
+  margin-inline: auto;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 2fr;
   place-items: center;
+  max-width: 2000px;
 }
 
 .home-content {
@@ -11,7 +14,6 @@
   align-content: center;
   place-items: center;
   background-color: transparent;
-  max-width: 2000px;
 }
 
 p-button {
@@ -33,16 +35,36 @@ p-button {
   text-align: left;
 }
 
-.image-home {
+.img-container {
   width: 45vw;
   max-width: 700px;
   height: 40vh;
+  max-height: 550px;
+}
+
+.shadow-inset {
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+}
+
+.image-home {
+  margin: 2rem;
   transform: translateX(-20px);
+}
+
+.home-middle {
+  padding-left: 25px;
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-block: 5rem;
+  width: 100%;
+}
+
+.mission-company {
+  text-align: left;
 }
 
 .row {
   display: flex;
-  margin: auto;
 }
 
 .col {
@@ -93,7 +115,6 @@ p-button {
   }
 
   .home-content {
-    color: black;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
@@ -108,6 +129,19 @@ p-button {
     margin-top: 20px;
     width: 60vw;
     border-radius: 2em;
+    margin: 0;
+    padding: 10px;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .col>.img-container {
+    width: 500px;
+    margin: auto;
   }
 
   .landing-description {
@@ -118,7 +152,7 @@ p-button {
 @media only screen and (max-width: 510px) {
   .home-content {
     padding: 0px;
-    grid-template-rows: 2fr 1fr;
+    margin: 0;
   }
 
   .image-home {
@@ -128,5 +162,12 @@ p-button {
 
   .landing-title {
     padding-top: 10px;
+  }
+
+  .waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
   }
 }
