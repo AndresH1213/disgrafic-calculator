@@ -1,3 +1,7 @@
+.container {
+  margin-bottom: 20rem;
+}
+
 form {
   display: grid;
   background-color: var(--black-color);
@@ -16,6 +20,7 @@ h5 {
   color: rgba(173, 168, 168, 0.6);
   text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.1);
 }
+
 p {
   padding: 0;
   margin: 0;
@@ -80,6 +85,7 @@ input[type="number"] {
     grid-template-columns: 1fr;
   }
 }
+
 @media only screen and (max-width: 410px) {
   form {
     margin: 10px 0px;
@@ -95,6 +101,7 @@ input[type="number"] {
     padding: 0;
     width: 240px;
   }
+
   input[type="number"] {
     -moz-appearance: textfield;
     width: 60px;
