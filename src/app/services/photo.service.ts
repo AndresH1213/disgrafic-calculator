@@ -35,6 +35,7 @@ export class PhotoService {
       'Content-Type': contentType,
       'x-amz-acl': 'public-read',
     });
+    console.log({ fileUploadUrl });
     const req = new HttpRequest('PUT', fileUploadUrl, file, {
       headers: headers,
     });
